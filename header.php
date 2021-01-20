@@ -24,36 +24,29 @@
 <?php wp_body_open(); ?>
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'gatsby-wp' ); ?></a>
-
 	<header id="masthead" class="site-header">
-		<div class="site-branding">
-			<?php
-			the_custom_logo();
-			if ( is_front_page() && is_home() ) :
-				?>
-				<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-				<?php
-			else :
-				?>
-				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
-				<?php
-			endif;
-			$gatsby_wp_description = get_bloginfo( 'description', 'display' );
-			if ( $gatsby_wp_description || is_customize_preview() ) :
-				?>
-				<p class="site-description"><?php echo $gatsby_wp_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-			<?php endif; ?>
-		</div><!-- .site-branding -->
+		
 
-		<nav id="site-navigation" class="main-navigation">
-			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'gatsby-wp' ); ?></button>
-			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => 'menu-1',
-					'menu_id'        => 'primary-menu',
-				)
-			);
-			?>
+		<nav id="site-navigation" class="main-navigation navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'primary',
+						'menu_id'        => 'primary-menu',
+						'container'       => 'div',
+						'container_class' => 'collapse navbar-collapse',
+						'container_id'    => 'navbarToggler',
+						'menu_class'      => 'navbar-nav me-auto',
+						'fallback_cb'     => 'WP_Bootstrap_Navwalker::fallback',
+						'walker'          => new WP_Bootstrap_Navwalker(),
+					)
+				);
+				?>
+			</div>
 		</nav><!-- #site-navigation -->
 	</header><!-- #masthead -->

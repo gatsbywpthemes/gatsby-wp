@@ -11,8 +11,8 @@
 
 ?>
 
-	<footer id="colophon" class="site-footer">
-		<div class="site-info">
+	<footer id="colophon" class="site-footer text-white bg-dark p-4">
+		<div class="site-info container text-center">
 			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'gatsby-wp' ) ); ?>">
 				<?php
 				/* translators: %s: CMS name, i.e. WordPress. */
