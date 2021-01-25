@@ -72,8 +72,8 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 		}
 		public function enqueue() {
 			wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/569911808f.js' );
-			wp_enqueue_script( 'gatsby-wp-html5sortable-js', get_template_directory_uri() . '/js/html5sortable.min.js', array(), '1.0', true );
-			wp_enqueue_script( 'gatsby-wp-custom-controls3-js', get_template_directory_uri() . '/js/customizer3.js', array( 'gatsby-wp-html5sortable-js' ), '1.0', true );
+
+			wp_enqueue_script( 'gatsby-wp-custom-controls3-js', get_template_directory_uri() . '/build/customizer.js', array(), '1.0', true );
 			wp_enqueue_style( 'gatsby-wp-custom-controls-css', get_template_directory_uri() . '/css/customizer.css', array(), '1.0', 'all' );
 		}
 		public function render_content() {

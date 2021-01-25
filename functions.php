@@ -221,3 +221,15 @@ add_action(
 	11
 );
 
+
+
+require_once get_template_directory() . '/inc/page-metabox.php';
+
+function gatsby_wp_enqueue_assets() {
+	wp_enqueue_script(
+		'gatsby_wp-gutenberg-sidebar',
+		get_template_directory_uri() . '/build/index.js',
+		array( 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data' )
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'gatsby_wp_enqueue_assets' );

@@ -246,6 +246,25 @@ add_action(
 			}
 		}
 
+		$wp_customize->add_setting(
+			'gatsby-wp-text_color',
+			array(
+				'capability' => 'manage_options',
+				'default'    => '#303030',
+			)
+		);
+
+		$wp_customize->add_control(
+			new WP_Customize_Color_Control(
+				$wp_customize,
+				'gatsby-wp-text_color',
+				array(
+					'label'   => __( 'Text Color', 'theme_textdomain' ),
+					'section' => 'gatsby-wp-features',
+				)
+			)
+		);
+
 	}
 );
 

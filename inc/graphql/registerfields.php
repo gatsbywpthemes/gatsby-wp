@@ -18,6 +18,20 @@ add_action(
 		);
 
 		register_graphql_object_type(
+			'GatsbyWPThemesColor',
+			array(
+				'description' => __(
+					'Theme Color',
+					'gatsby-wp'
+				),
+				'fields'      => array(
+					'name'     => array( 'type' => 'String' ),
+					'hexValue' => array( 'type' => 'String' ),
+				),
+			)
+		);
+
+		register_graphql_object_type(
 			'GatsbyWPThemesConfig',
 			array(
 				'description' => __(
@@ -34,6 +48,7 @@ add_action(
 					'addWordPressComments' => array( 'type' => 'Boolean' ),
 					'addWordPressSearch'   => array( 'type' => 'Boolean' ),
 					'socialFollowLinks'    => array( 'type' => array( 'list_of' => 'GatsbyWPThemesSocial' ) ),
+					'textColor'            => array( 'type' => 'String' ),
 				),
 			)
 		);
@@ -73,6 +88,7 @@ add_action(
 							}
 							return $name_url;
 						},
+						'textColor'            => get_theme_mod( 'gatsby-wp-text_color' ),
 					);
 				},
 			)
