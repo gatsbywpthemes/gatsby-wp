@@ -48,7 +48,6 @@ if ( ! function_exists( 'gatsby_wp_setup' ) ) :
 		add_theme_support( 'post-thumbnails' );
 
 		require_once get_template_directory() . '/inc/custom-nav-walker.php';
-		
 
 		// This theme uses wp_nav_menu() in one location.
 		register_nav_menus(
@@ -104,8 +103,6 @@ if ( ! function_exists( 'gatsby_wp_setup' ) ) :
 			)
 		);
 
-
-
 	}
 endif;
 add_action( 'after_setup_theme', 'gatsby_wp_setup' );
@@ -136,24 +133,23 @@ function gatsby_wp_widgets_init() {
 			'before_widget' => '<section id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</section>',
 			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>' ,
+			'after_title'   => '</h2>',
 		)
 	);
 }
-//add_action( 'widgets_init', 'gatsby_wp_widgets_init' );
+// add_action( 'widgets_init', 'gatsby_wp_widgets_init' );
 
 /**
  * Enqueue scripts and styles.
  */
 function gatsby_wp_scripts() {
-	wp_enqueue_style('b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css');
-	wp_enqueue_style( 'gatsby-wp-style', get_stylesheet_uri(), array('b5'), _S_VERSION );
+	wp_enqueue_style( 'b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' );
+	wp_enqueue_style( 'gatsby-wp-style', get_stylesheet_uri(), array( 'b5' ), _S_VERSION );
 	wp_style_add_data( 'gatsby-wp-style', 'rtl', 'replace' );
 
 	wp_enqueue_script( 'gatsby-wp-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
-	
-	//wp_enqueue_script( 'gatsby-wp-b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js', array(), _S_VERSION, true );
-	
+
+	// wp_enqueue_script( 'gatsby-wp-b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js', array(), _S_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -187,4 +183,41 @@ require get_template_directory() . '/inc/customizer.php';
 if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
+
+
+require_once get_template_directory() . '/inc/graphql/registerfields.php';
+
+// redirect users that are not logged in to another template
+add_filter(
+	'template_include',
+	function( $template ) {
+		if ( ! is_user_logged_in() ) {
+			$new_template = locate_template( array( 'headless.php' ) );
+			if ( '' != $new_template ) {
+				return $new_template;
+			}
+		}
+		return $template;
+	},
+	99
+);
+
+
+// remove sidebar activate in the parent theme
+add_action(
+	'widgets_init',
+	function() {
+		unregister_sidebar( 'sidebar-1' );
+	},
+	11
+);
+
+add_action(
+	'after_setup_theme',
+	function () {
+		remove_theme_support( 'custom-header' );
+		remove_theme_support( 'custom-background' );
+	},
+	11
+);
 
