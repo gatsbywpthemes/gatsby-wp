@@ -1452,6 +1452,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
 
 function isValidHttpUrl(string) {
   var url;
@@ -1465,19 +1472,109 @@ function isValidHttpUrl(string) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
-var DraggableInputs = /*#__PURE__*/function () {
-  function DraggableInputs(_ref) {
-    var elSelector = _ref.elSelector,
-        outputSelector = _ref.outputSelector,
-        sortableSelector = _ref.sortableSelector,
+var DraggableCheckboxes = /*#__PURE__*/function () {
+  function DraggableCheckboxes(element, _ref) {
+    var _ref$outputSelector = _ref.outputSelector,
+        outputSelector = _ref$outputSelector === void 0 ? "input[type='hidden']" : _ref$outputSelector,
+        _ref$sortableSelector = _ref.sortableSelector,
+        sortableSelector = _ref$sortableSelector === void 0 ? ".sortable" : _ref$sortableSelector,
         _ref$sortableOptions = _ref.sortableOptions,
-        sortableOptions = _ref$sortableOptions === void 0 ? {} : _ref$sortableOptions,
-        _ref$validationFuncti = _ref.validationFunction,
-        validationFunction = _ref$validationFuncti === void 0 ? function () {
+        sortableOptions = _ref$sortableOptions === void 0 ? {} : _ref$sortableOptions;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, DraggableCheckboxes);
+
+    this.element = element;
+    this.getInputs();
+    this.sortableSelector = sortableSelector;
+    this.sortableOptions = sortableOptions;
+    this.output = element.querySelector(outputSelector);
+    this.sortable = null;
+    this.start();
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(DraggableCheckboxes, [{
+    key: "getInputs",
+    value: function getInputs() {
+      this.inputs = this.element.querySelectorAll("input[type='checkbox']");
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      this.startSortable();
+      this.addListeners();
+    }
+  }, {
+    key: "startSortable",
+    value: function startSortable() {
+      this.sortable = Object(html5sortable_dist_html5sortable_es_js__WEBPACK_IMPORTED_MODULE_2__["default"])("#".concat(this.element.id, " ").concat(this.sortableSelector), this.sortableOptions)[0];
+      console.log("#".concat(this.element.id, " ").concat(this.sortableSelector), this.sortable);
+    }
+  }, {
+    key: "addListeners",
+    value: function addListeners() {
+      var _this$sortable,
+          _this = this;
+
+      (_this$sortable = this.sortable) === null || _this$sortable === void 0 ? void 0 : _this$sortable.addEventListener("sortupdate", function () {
+        _this.getInputs();
+
+        _this.getAllCheckboxes();
+      });
+      this.inputs.forEach(function (input) {
+        input.addEventListener("change", function () {
+          _this.getAllCheckboxes();
+
+          if (input.checked) {
+            input.parentNode.classList.add("active");
+          } else {
+            input.parentNode.classList.remove("active");
+          }
+        });
+      });
+    }
+  }, {
+    key: "getAllCheckboxes",
+    value: function getAllCheckboxes() {
+      var inputValues = [];
+
+      var _iterator = _createForOfIteratorHelper(this.inputs),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var input = _step.value;
+
+          if (input.checked) {
+            inputValues.push(input.value);
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      this.output.value = inputValues;
+      this.output.dispatchEvent(new Event("change"));
+    }
+  }]);
+
+  return DraggableCheckboxes;
+}();
+
+var DraggableInputs = /*#__PURE__*/function () {
+  function DraggableInputs(_ref2) {
+    var elSelector = _ref2.elSelector,
+        outputSelector = _ref2.outputSelector,
+        sortableSelector = _ref2.sortableSelector,
+        _ref2$sortableOptions = _ref2.sortableOptions,
+        sortableOptions = _ref2$sortableOptions === void 0 ? {} : _ref2$sortableOptions,
+        _ref2$validationFunct = _ref2.validationFunction,
+        validationFunction = _ref2$validationFunct === void 0 ? function () {
       return true;
-    } : _ref$validationFuncti,
-        _ref$errorMessage = _ref.errorMessage,
-        errorMessage = _ref$errorMessage === void 0 ? "Invalid format" : _ref$errorMessage;
+    } : _ref2$validationFunct,
+        _ref2$errorMessage = _ref2.errorMessage,
+        errorMessage = _ref2$errorMessage === void 0 ? "Invalid format" : _ref2$errorMessage;
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, DraggableInputs);
 
@@ -1514,28 +1611,28 @@ var DraggableInputs = /*#__PURE__*/function () {
   }, {
     key: "addListeners",
     value: function addListeners() {
-      var _this$sortable,
-          _this = this,
+      var _this$sortable2,
+          _this2 = this,
           _this$elements;
 
-      (_this$sortable = this.sortable) === null || _this$sortable === void 0 ? void 0 : _this$sortable.addEventListener("sortupdate", function () {
-        _this.getElements();
+      (_this$sortable2 = this.sortable) === null || _this$sortable2 === void 0 ? void 0 : _this$sortable2.addEventListener("sortupdate", function () {
+        _this2.getElements();
 
-        _this.getAllInputs();
+        _this2.getAllInputs();
       });
       (_this$elements = this.elements) === null || _this$elements === void 0 ? void 0 : _this$elements.forEach(function (el) {
         var input = el.querySelector("input");
         input.addEventListener("change", function () {
-          _this.onSubmit(input, el);
+          _this2.onSubmit(input, el);
         });
         input.addEventListener("blur", function () {
           if (!input.value) {
-            _this.onSubmit(input, el);
+            _this2.onSubmit(input, el);
           }
         });
         input.addEventListener("keydown", function (event) {
           if (event.key === "Enter") {
-            _this.onSubmit(input, el);
+            _this2.onSubmit(input, el);
           }
         });
       });
@@ -1636,6 +1733,15 @@ var DraggableInputs = /*#__PURE__*/function () {
 }();
 
 wp.customize.bind("ready", function () {
+  var colorControls = document.querySelectorAll(".customize-control-gatsby_wp_color");
+  colorControls.forEach(function (c) {
+    var button = c.querySelector("button[data-default-color]");
+    var input = c.querySelector("input[type='color']");
+    button.addEventListener("click", function () {
+      input.value = button.getAttribute("data-default-color");
+      input.dispatchEvent(new Event("change"));
+    });
+  });
   var sortableSocialLinks = new DraggableInputs({
     elSelector: ".customize-control-wp-gatsby_all_follows label",
     outputSelector: "#gatsby-wp-social_follow_order",
@@ -1649,6 +1755,27 @@ wp.customize.bind("ready", function () {
       items: "label"
     }
   });
+  var sortableWidgets = document.querySelectorAll(".customize-control-wp-gatsby_sortable_checkboxes[id]");
+
+  var _iterator2 = _createForOfIteratorHelper(sortableWidgets),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var s = _step2.value;
+      new DraggableCheckboxes(s, {
+        sortableOptions: {
+          placeholder: "pill-ui-state-highlight",
+          forcePlaceholderSize: true
+        }
+      });
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
   sortableSocialLinks.start();
 });
 

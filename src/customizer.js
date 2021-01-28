@@ -11,6 +11,67 @@ function isValidHttpUrl(string) {
   return url.protocol === "http:" || url.protocol === "https:"
 }
 
+class DraggableCheckboxes {
+  constructor(
+    element,
+    {
+      outputSelector = "input[type='hidden']",
+      sortableSelector = ".sortable",
+      sortableOptions = {},
+    }
+  ) {
+    this.element = element
+    this.getInputs()
+    this.sortableSelector = sortableSelector
+    this.sortableOptions = sortableOptions
+    this.output = element.querySelector(outputSelector)
+    this.sortable = null
+    this.start()
+  }
+  getInputs() {
+    this.inputs = this.element.querySelectorAll("input[type='checkbox']")
+  }
+  start() {
+    this.startSortable()
+    this.addListeners()
+  }
+  startSortable() {
+    this.sortable = sortable(
+      `#${this.element.id} ${this.sortableSelector}`,
+      this.sortableOptions
+    )[0]
+    console.log(`#${this.element.id} ${this.sortableSelector}`, this.sortable)
+  }
+
+  addListeners() {
+    this.sortable?.addEventListener("sortupdate", () => {
+      this.getInputs()
+      this.getAllCheckboxes()
+    })
+
+    this.inputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        this.getAllCheckboxes()
+        if (input.checked) {
+          input.parentNode.classList.add("active")
+        } else {
+          input.parentNode.classList.remove("active")
+        }
+      })
+    })
+  }
+  getAllCheckboxes() {
+    let inputValues = []
+    for (const input of this.inputs) {
+      if (input.checked) {
+        inputValues.push(input.value)
+      }
+    }
+    this.output.value = inputValues
+    this.output.dispatchEvent(new Event("change"))
+  }
+}
+
 class DraggableInputs {
   constructor({
     elSelector,
@@ -166,6 +227,19 @@ class DraggableInputs {
 }
 
 wp.customize.bind("ready", function () {
+  const colorControls = document.querySelectorAll(
+    ".customize-control-gatsby_wp_color"
+  )
+
+  colorControls.forEach((c) => {
+    const button = c.querySelector("button[data-default-color]")
+    const input = c.querySelector("input[type='color']")
+    button.addEventListener("click", () => {
+      input.value = button.getAttribute("data-default-color")
+      input.dispatchEvent(new Event("change"))
+    })
+  })
+
   const sortableSocialLinks = new DraggableInputs({
     elSelector: ".customize-control-wp-gatsby_all_follows label",
     outputSelector: "#gatsby-wp-social_follow_order",
@@ -179,6 +253,18 @@ wp.customize.bind("ready", function () {
       items: "label",
     },
   })
+
+  const sortableWidgets = document.querySelectorAll(
+    ".customize-control-wp-gatsby_sortable_checkboxes[id]"
+  )
+  for (const s of sortableWidgets) {
+    new DraggableCheckboxes(s, {
+      sortableOptions: {
+        placeholder: "pill-ui-state-highlight",
+        forcePlaceholderSize: true,
+      },
+    })
+  }
 
   sortableSocialLinks.start()
 })

@@ -7,9 +7,16 @@
  * @package gatsby-wp
  */
 
+if ( is_child_theme() ) {
+	$temp_obj  = wp_get_theme();
+	$theme_obj = wp_get_theme( $temp_obj->get( 'Template' ) );
+} else {
+	$theme_obj = wp_get_theme();
+}
+
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.0' );
+	define( '_S_VERSION', $theme_obj->get( 'Version' ) );
 }
 
 if ( ! function_exists( 'gatsby_wp_setup' ) ) :
@@ -30,7 +37,8 @@ if ( ! function_exists( 'gatsby_wp_setup' ) ) :
 		load_theme_textdomain( 'gatsby-wp', get_template_directory() . '/languages' );
 
 		// Add default posts and comments RSS feed links to head.
-		add_theme_support( 'automatic-feed-links' );
+		// to remove ?
+		// add_theme_support( 'automatic-feed-links' );
 
 		/*
 		 * Let WordPress manage the document title.
@@ -73,21 +81,6 @@ if ( ! function_exists( 'gatsby_wp_setup' ) ) :
 			)
 		);
 
-		// Set up the WordPress core custom background feature.
-		add_theme_support(
-			'custom-background',
-			apply_filters(
-				'gatsby_wp_custom_background_args',
-				array(
-					'default-color' => 'ffffff',
-					'default-image' => '',
-				)
-			)
-		);
-
-		// Add theme support for selective refresh for widgets.
-		add_theme_support( 'customize-selective-refresh-widgets' );
-
 		/**
 		 * Add support for core custom logo.
 		 *
@@ -119,48 +112,24 @@ function gatsby_wp_content_width() {
 }
 add_action( 'after_setup_theme', 'gatsby_wp_content_width', 0 );
 
-/**
- * Register widget area.
- *
- * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
- */
-function gatsby_wp_widgets_init() {
-	register_sidebar(
-		array(
-			'name'          => esc_html__( 'Sidebar', 'gatsby-wp' ),
-			'id'            => 'sidebar-1',
-			'description'   => esc_html__( 'Add widgets here.', 'gatsby-wp' ),
-			'before_widget' => '<section id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</section>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
-		)
-	);
-}
-// add_action( 'widgets_init', 'gatsby_wp_widgets_init' );
 
 /**
  * Enqueue scripts and styles.
  */
-function gatsby_wp_scripts() {
-	wp_enqueue_style( 'b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' );
-	wp_enqueue_style( 'gatsby-wp-style', get_stylesheet_uri(), array( 'b5' ), _S_VERSION );
-	wp_style_add_data( 'gatsby-wp-style', 'rtl', 'replace' );
 
-	wp_enqueue_script( 'gatsby-wp-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
-
-	// wp_enqueue_script( 'gatsby-wp-b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js', array(), _S_VERSION, true );
-
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
+add_action(
+	'wp_enqueue_scripts',
+	function () {
+		wp_enqueue_style( 'b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' );
+		wp_enqueue_style( 'gatsby-wp-style', get_stylesheet_uri(), array( 'b5' ), _S_VERSION );
+		wp_enqueue_script( 'gatsby-wp-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+		wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/569911808f.js' );
+		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+			wp_enqueue_script( 'comment-reply' );
+		}
 	}
-}
-add_action( 'wp_enqueue_scripts', 'gatsby_wp_scripts' );
+);
 
-/**
- * Implement the Custom Header feature.
- */
-require get_template_directory() . '/inc/custom-header.php';
 
 /**
  * Custom template tags for this theme.
@@ -175,6 +144,89 @@ require get_template_directory() . '/inc/template-functions.php';
 /**
  * Customizer additions.
  */
+
+$gatsby_wp_customizer_config = array(
+	'logo'            => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_logo', true ),
+		'default'  => '',
+	),
+	'dark_mode_logo'  => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_dark_mode_logo', true ),
+		'default'  => '',
+	),
+	'add_wp_comments' => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_add_wp_comments', true ),
+		'default'  => 'true',
+	),
+	'add_wp_search'   => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_add_wp_search', true ),
+		'default'  => 'true',
+	),
+	'widgets'         => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_widgets', true ),
+		'areas'    =>
+			apply_filters(
+				'gatsby_wp_customizer_widget_areas',
+				array(
+					'slide_menu_widgets' => array(
+						'supports'    => apply_filters( 'gatsby_wp_customizer_supports_slide_menu_widgets', true ),
+						'label'       => __( 'Navigation Sidebar Widgets', 'gatsby-wp' ),
+						'description' => esc_html__( 'These widgets will be displayed in the off-canvas navigation sidebar.', 'gatsby-wp' ),
+						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
+					),
+					'sidebar_widgets'    => array(
+						'supports'    => apply_filters( 'gatsby_wp_customizer_supports_sidebar_widgets', true ),
+						'label'       => __( 'Sidebar Widgets', 'gatsby-wp' ),
+						'description' => esc_html__( 'These widgets will be displayed in the Sidebar Widgets area.', 'gatsby-wp' ),
+						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
+					),
+				)
+			),
+	),
+	'social_follow'   => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_social_follow', true ),
+	),
+	'colors'          => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_colors', true ),
+		'colors'   =>
+			apply_filters(
+				'gatsby_wp_customizer_colors',
+				array(
+					'text' => array(
+						'label'       => __( 'Text color', 'gatsby-wp' ),
+						'description' => esc_html__( '....', 'gatsby-wp' ),
+						'default'     => '#303030',
+					),
+					'bg'   => array(
+						'label'       => __( 'Background Color', 'gatsby-wp' ),
+						'description' => esc_html__( '....', 'gatsby-wp' ),
+						'default'     => '#fff',
+					),
+				)
+			),
+	),
+	'modes'           => array(
+		'supports' => apply_filters( 'gatsby_wp_customizer_supports_modes', true ),
+		'colors'   =>
+			apply_filters(
+				'gatsby_wp_customizer_modes',
+				array(
+					'dark' => array(
+						'text' => array(
+							'label'       => __( 'Dark Mode Text Color', 'gatsby-wp' ),
+							'description' => esc_html__( '....', 'gatsby-wp' ),
+							'default'     => '#fff',
+						),
+						'bg'   => array(
+							'label'       => __( 'Dark Mode  Background Color', 'gatsby-wp' ),
+							'description' => esc_html__( '....', 'gatsby-wp' ),
+							'default'     => '#303030',
+						),
+					),
+				)
+			),
+	),
+);
 require get_template_directory() . '/inc/customizer.php';
 
 /**
@@ -197,30 +249,16 @@ add_filter(
 				return $new_template;
 			}
 		}
+		if ( is_customize_preview() ) {
+			$new_template = locate_template( array( 'documentation.php' ) );
+			if ( '' != $new_template ) {
+				return $new_template;
+			}
+		}
 		return $template;
 	},
 	99
 );
-
-
-// remove sidebar activate in the parent theme
-add_action(
-	'widgets_init',
-	function() {
-		unregister_sidebar( 'sidebar-1' );
-	},
-	11
-);
-
-add_action(
-	'after_setup_theme',
-	function () {
-		remove_theme_support( 'custom-header' );
-		remove_theme_support( 'custom-background' );
-	},
-	11
-);
-
 
 
 require_once get_template_directory() . '/inc/page-metabox.php';

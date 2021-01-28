@@ -46,6 +46,8 @@
     "bundle": "wp-scripts build && dir-archiver --src . --dest ../gatsby-wp.zip --exclude .DS_Store .stylelintrc.json .eslintrc .git .gitattributes .github .gitignore README.md composer.json composer.lock node_modules vendor package-lock.json package.json src webpack.config.js .travis.yml phpcs.xml.dist sass style.css.map"
   },
   "dependencies": {
-    "html5sortable": "^0.10.0"
+    "color-contrast-checker": "^1.5.0",
+    "html5sortable": "^0.10.0",
+    "tinycolor2": "^1.4.2"
   }
 }

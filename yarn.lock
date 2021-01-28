@@ -1995,7 +1995,7 @@ ajv@^7.0.2:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-amdefine@>=0.0.4:
+amdefine@>=0.0.4, amdefine@>=0.2.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
@@ -3136,6 +3136,13 @@ collection-visit@^1.0.0:
   dependencies:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
+
+color-contrast-checker@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/color-contrast-checker/-/color-contrast-checker-1.5.0.tgz#741456b8b97d7cedcae8f10e8b17d1f734a8dd42"
+  integrity sha512-7vcVIjdieWaxDQk4RTqCgU/iM1JEllxymR7AmoSgoakas5EKqfLhTphwrCEABYGMN9VG+h5a9utUlyGgY1F9WQ==
+  dependencies:
+    amdefine ">=0.2.0"
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -10092,6 +10099,11 @@ tiny-lr@^1.1.1:
     livereload-js "^2.3.0"
     object-assign "^4.1.0"
     qs "^6.4.0"
+
+tinycolor2@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
+  integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
 
 tmpl@1.0.x:
   version "1.0.4"

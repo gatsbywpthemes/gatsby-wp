@@ -6,6 +6,7 @@ module.exports = {
     index: "./src/index.js",
     navigation: "./src/navigation.js",
     customizer: "./src/customizer.js",
+    customizerpreview: "./src/customizerpreview.js",
   },
   module: {
     ...defaultConfig.module,

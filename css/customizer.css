@@ -189,22 +189,16 @@ input[type="number"]:focus {
    Pill Checkboxes
    ========================================================================== */
 .pill_checkbox_control .checkbox-label > input {
-  display: none;
+  visibility: hidden;
+  position: absolute;
 }
 
-.pill_checkbox_control .checkbox-label > .sortable-pill-title {
+.pill_checkbox_control label > .sortable-pill-title {
   box-sizing: border-box;
   cursor: pointer;
-  background-color: #ddd;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 1rem;
+  margin-left: 1rem;
   display: inline-block;
-  margin-bottom: 5px;
-}
-
-.pill_checkbox_control .sortable .checkbox-label > .sortable-pill-title {
-  cursor: move;
+  font-size: 1rem;
 }
 
 .pill_checkbox_control
@@ -212,11 +206,6 @@ input[type="number"]:focus {
   .checkbox-label
   > .sortable-pill-title {
   cursor: pointer;
-}
-
-.pill_checkbox_control .checkbox-label > input:checked + .sortable-pill-title {
-  background-color: #2084bd;
-  color: #fff;
 }
 
 .pill_checkbox_control
@@ -568,7 +557,7 @@ label:not(.not-empty) .drag-handle {
 input.invalid {
   background-color: #ff000038;
 }
-
+.customize-control-wp-gatsby_sortable_checkboxes label,
 .customize-control-wp-gatsby_all_follows label {
   margin-bottom: 0.5rem;
   background: white;
@@ -576,6 +565,26 @@ input.invalid {
   padding: 0.5rem;
   display: flex;
   align-items: center;
+  transition: 0.6s;
+}
+.customize-control-wp-gatsby_sortable_checkboxes label:not(.active) {
+  background: transparent;
+  border: 1px solid;
+}
+.customize-control-wp-gatsby_sortable_checkboxes .active {
+  background: #8919f9;
+}
+
+.customize-control-wp-gatsby_sortable_checkboxes .active * {
+  color: white;
+}
+.customize-control-wp-gatsby_sortable_checkboxes .active .fa-square,
+.customize-control-wp-gatsby_sortable_checkboxes label .fa-check-square {
+  display: none;
+}
+.customize-control-wp-gatsby_sortable_checkboxes label .fa-square,
+.customize-control-wp-gatsby_sortable_checkboxes .active .fa-check-square {
+  display: block;
 }
 .customize-control-wp-gatsby_all_follows label > * {
   margin: 0 1rem;
@@ -590,8 +599,8 @@ input.invalid {
 .customize-control-wp-gatsby_all_follows label i {
   font-size: 1.5rem;
 }
-.customize-control-wp-gatsby_all_follows .drag-handle {
+.drag-handle {
   margin: 0;
-  padding: 1.25rem;
+  padding: 1rem;
   background: #00000009;
 }

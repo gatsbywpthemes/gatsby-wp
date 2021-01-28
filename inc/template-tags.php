@@ -165,3 +165,31 @@ if ( ! function_exists( 'wp_body_open' ) ) :
 		do_action( 'wp_body_open' );
 	}
 endif;
+
+function wcag_test( $prop1, $prop2 ) {
+	?>
+<ul class="list-group wcag bg-white text-dark float-end shadow ms-3 mb-3">
+		<li class="list-group-item border-0 px-2 py-1">WCAG contrast ratio: <strong data-prop1="<?php echo $prop1; ?>" data-prop2="<?php echo $prop2; ?>"></strong></li>
+		<li class="list-group-item border-0 p-1 aa">
+			<i class="fas fa-check text-success"></i>
+			<i class="fas fa-ban text-danger"></i>
+			<span class="wcag__level-text">AA&nbsp; large font size (3+)</span>
+		</li>
+		<li class="list-group-item border-0 p-1 aas">
+		<i class="fas fa-check text-success"></i>
+			<i class="fas fa-ban text-danger"></i>
+			<span class="wcag__level-text">AA&nbsp; small font size (4.5+)</span>
+		</li>
+		<li class="list-group-item border-0 p-1 aaa">
+			<i class="fas fa-check text-success"></i>
+			<i class="fas fa-ban text-danger"></i>
+			<span class="wcag__level-text">AAA large font size (4.5+)</span>
+		</li>
+		<li class="list-group-item border-0 p-1 aaas">
+			<i class="fas fa-check text-success"></i>
+			<i class="fas fa-ban text-danger"></i>
+			<span class="wcag__level-text">AAA small font size (7+)</span>
+		</li>
+	</ul>
+	<?php
+}

@@ -6,48 +6,6 @@
  */
 require_once get_template_directory() . '/inc/custom-customizer-controls.php';
 
-$config = array(
-	'logo'            => array(
-		'supports' => apply_filters( 'gatsby_wp_customizer_supports_logo', true ),
-		'default'  => '',
-	),
-	'dark_mode_logo'  => array(
-		'supports' => apply_filters( 'gatsby_wp_customizer_supports_dark_mode_logo', true ),
-		'default'  => '',
-	),
-	'add_wp_comments' => array(
-		'supports' => apply_filters( 'gatsby_wp_customizer_supports_add_wp_comments', true ),
-		'default'  => 'true',
-	),
-	'add_wp_search'   => array(
-		'supports' => apply_filters( 'gatsby_wp_customizer_supports_add_wp_search', true ),
-		'default'  => 'true',
-	),
-	'widgets'         => array(
-		'supports' => apply_filters( 'gatsby_wp_customizer_supports_widgets', true ),
-		'areas'    =>
-			apply_filters(
-				'gatsby_wp_customizer_widget_areas',
-				array(
-					'slide_menu_widgets' => array(
-						'supports'    => apply_filters( 'gatsby_wp_customizer_supports_slide_menu_widgets', true ),
-						'label'       => __( 'Navigation Sidebar Widgets', 'gatsby-wp' ),
-						'description' => esc_html__( 'These widgets will be displayed in the off-canvas navigation sidebar.', 'gatsby-wp' ),
-						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
-					),
-					'sidebar_widgets'    => array(
-						'supports'    => apply_filters( 'gatsby_wp_customizer_supports_sidebar_widgets', true ),
-						'label'       => __( 'Sidebar Widgets', 'gatsby-wp' ),
-						'description' => esc_html__( 'These widgets will be displayed in the Sidebar Widgets area.', 'gatsby-wp' ),
-						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
-					),
-				)
-			),
-	),
-	'social_follow'   => array(
-		'supports' => apply_filters( 'gatsby_wp_customizer_supports_social_follow', true ),
-	),
-);
 
 		/**
 		 * Add postMessage support for site title and description for the Theme Customizer.
@@ -57,26 +15,30 @@ $config = array(
 
 add_action(
 	'customize_register',
-	function ( $wp_customize ) use ( $config ) {
-		$wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
-		$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
-		$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
+	function ( $wp_customize ) use ( $gatsby_wp_customizer_config ) {
+		$wp_customize->get_setting( 'blogname' )->transport        = 'postMessage';
+		$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
 
 		if ( isset( $wp_customize->selective_refresh ) ) {
 			$wp_customize->selective_refresh->add_partial(
 				'blogname',
 				array(
-					'selector'        => '.site-title a',
-					'render_callback' => 'gatsby_wp_customize_partial_blogname',
+					'selector'        => '.site-title',
+					'render_callback' => function () {
+						bloginfo( 'name' );
+					},
 				)
 			);
 			$wp_customize->selective_refresh->add_partial(
 				'blogdescription',
 				array(
 					'selector'        => '.site-description',
-					'render_callback' => 'gatsby_wp_customize_partial_blogdescription',
+					'render_callback' => function () {
+						bloginfo( 'description' );
+					},
 				)
 			);
+
 		}
 
 		$wp_customize->remove_section( 'custom_css' );
@@ -101,7 +63,7 @@ add_action(
 			)
 		);
 
-		if ( $config['logo']['supports'] ) {
+		if ( $gatsby_wp_customizer_config['logo']['supports'] ) {
 			$wp_customize->add_setting(
 				'gatsby-wp-logo',
 				array(
@@ -123,7 +85,7 @@ add_action(
 			);
 		}
 
-		if ( $config['dark_mode_logo']['supports'] ) {
+		if ( $gatsby_wp_customizer_config['dark_mode_logo']['supports'] ) {
 			$wp_customize->add_setting(
 				'gatsby-wp-dark_mode_logo',
 				array(
@@ -145,13 +107,13 @@ add_action(
 				)
 			);
 		}
-		if ( $config['add_wp_comments']['supports'] ) {
+		if ( $gatsby_wp_customizer_config['add_wp_comments']['supports'] ) {
 			$wp_customize->add_setting(
 				'gatsby-wp-add_wp_comments',
 				array(
 					'type'       => 'option',
 					'capability' => 'manage_options',
-					'default'    => $config['add_wp_comments']['default'],
+					'default'    => $gatsby_wp_customizer_config['add_wp_comments']['default'],
 				)
 			);
 
@@ -167,13 +129,13 @@ add_action(
 			);
 		}
 
-		if ( $config['add_wp_search']['supports'] ) {
+		if ( $gatsby_wp_customizer_config['add_wp_search']['supports'] ) {
 			$wp_customize->add_setting(
 				'gatsby-wp-add_wp_search',
 				array(
 					'type'       => 'option',
 					'capability' => 'manage_options',
-					'default'    => $config['add_wp_search']['default'],
+					'default'    => $gatsby_wp_customizer_config['add_wp_search']['default'],
 				)
 			);
 
@@ -189,7 +151,7 @@ add_action(
 			);
 		}
 
-		if ( $config['social_follow']['supports'] ) {
+		if ( $gatsby_wp_customizer_config['social_follow']['supports'] ) {
 			$wp_customize->add_section(
 				'gatsby-wp-social_follow',
 				array(
@@ -201,7 +163,7 @@ add_action(
 			require_once get_template_directory() . '/inc/customizer-follow-links.php';
 		}
 
-		if ( $config['widgets']['supports'] ) {
+		if ( $gatsby_wp_customizer_config['widgets']['supports'] ) {
 			$wp_customize->add_section(
 				'gatsby-wp-widgets',
 				array(
@@ -210,7 +172,7 @@ add_action(
 					'panel'       => 'gatsby-wp-site-settings',
 				)
 			);
-			$areas = $config['widgets']['areas'];
+			$areas = $gatsby_wp_customizer_config['widgets']['areas'];
 			foreach ( $areas as $key => $area ) {
 				if ( $area['supports'] ) {
 					$wp_customize->add_setting(
@@ -246,51 +208,79 @@ add_action(
 			}
 		}
 
-		$wp_customize->add_setting(
-			'gatsby-wp-text_color',
-			array(
-				'capability' => 'manage_options',
-				'default'    => '#303030',
-			)
-		);
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'gatsby-wp-text_color',
+		if ( $gatsby_wp_customizer_config['colors']['supports'] ) {
+			$wp_customize->add_section(
+				'gatsby-wp-css-theme',
 				array(
-					'label'   => __( 'Text Color', 'theme_textdomain' ),
-					'section' => 'gatsby-wp-features',
+					'title'       => __( 'CSS Theme', 'gatsby-wp' ),
+					'description' => __( 'Currently our Gatsby themes ...', 'gatsby-wp' ),
+					'panel'       => 'gatsby-wp-site-settings',
 				)
-			)
-		);
+			);
+			foreach ( $gatsby_wp_customizer_config['colors']['colors'] as $name => $settings ) {
+				$wp_customize->add_setting(
+					"gatsby-wp-colors-$name",
+					array(
+						'capability' => 'manage_options',
+						'default'    => $settings['default'],
+						'transport'  => 'postMessage',
+					)
+				);
+				$wp_customize->add_control(
+					new Gatsby_WP_Color_Control(
+						$wp_customize,
+						"gatsby-wp-colors-$name",
+						array(
+							'label'       => $settings['label'],
+							'description' => array_key_exists( 'description', $settings ) ? $settings['description'] : null,
+							'section'     => 'gatsby-wp-css-theme',
+						)
+					)
+				);
+				$wp_customize->selective_refresh->add_partial(
+					"gatsby-wp-colors-$name",
+					array(
+						'selector'         => '[data-to="' . "gatsby-wp-colors-$name" . '"]',
+						'fallback_refresh' => false,
+					)
+				);
+			}
+			if ( $gatsby_wp_customizer_config['modes']['supports'] ) {
+				foreach ( $gatsby_wp_customizer_config['modes']['colors'] as $key => $mode ) {
+					foreach ( $mode as $name => $settings ) {
+						$wp_customize->add_setting(
+							"gatsby-wp-colors-mode-$key-$name",
+							array(
+								'capability' => 'manage_options',
+								'default'    => $settings['default'],
+								'transport'  => 'postMessage',
+							)
+						);
+						$wp_customize->add_control(
+							new Gatsby_WP_Color_Control(
+								$wp_customize,
+								"gatsby-wp-colors-mode-$key-$name",
+								array(
+									'label'       => $settings['label'],
+									'description' => array_key_exists( 'description', $settings ) ? $settings['description'] : null,
+									'section'     => 'gatsby-wp-css-theme',
+								)
+							)
+						);
+					}
+				}
+			}
+		}
 
 	}
 );
 
-		/**
-		 * Render the site title for the selective refresh partial.
-		 *
-		 * @return void
-		 */
-function gatsby_wp_customize_partial_blogname() {
-	bloginfo( 'name' );
-}
-
-		/**
-		 * Render the site tagline for the selective refresh partial.
-		 *
-		 * @return void
-		 */
-function gatsby_wp_customize_partial_blogdescription() {
-	bloginfo( 'description' );
-}
 
 		/**
 		 * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
 		 */
 function gatsby_wp_customize_preview_js() {
-	wp_enqueue_script( 'gatsby-wp-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), _S_VERSION, true );
+	wp_enqueue_script( 'gatsby-wp-customizer', get_template_directory_uri() . '/build/customizerpreview.js', array( 'customize-preview' ), _S_VERSION, true );
 }
 add_action( 'customize_preview_init', 'gatsby_wp_customize_preview_js' );
 
@@ -299,5 +289,18 @@ add_action(
 	'customize_controls_print_styles',
 	function() {
 		wp_enqueue_style( 'gatsby-wp-customize-css', get_template_directory_uri() . '/css/customizer-main.css', array() );
+	}
+);
+
+add_action(
+	'customize_controls_enqueue_scripts',
+	function() {
+			wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/569911808f.js' );
+			wp_enqueue_script( 'gatsby-wp-custom-controls3-js', get_template_directory_uri() . '/build/customizer.js', array(), '1.0', true );
+			wp_enqueue_style( 'gatsby-wp-custom-controls-css', get_template_directory_uri() . '/css/customizer.css', array(), '1.0', 'all' );
+			/*
+			wp_enqueue_script( 'gatsby-wp-html5sortable-js', get_template_directory_uri() . '/js/html5sortable.min.js', array(), '1.0', true );
+			wp_enqueue_script( 'gatsby-wp-custom-controls1-js', get_template_directory_uri() . '/js/customizer1.js', array( 'gatsby-wp-html5sortable-js' ), '1.0', true );
+			wp_enqueue_style( 'gatsby-wp-custom-controls-css', get_template_directory_uri() . '/css/customizer.css', array(), '1.0', 'all' );*/
 	}
 );

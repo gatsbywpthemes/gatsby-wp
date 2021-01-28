@@ -4,14 +4,11 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 		/**
 		 * The type of control being rendered
 		 */
-		public $type = 'pill_checkbox';
+		public $type = 'wp-gatsby_sortable_checkboxes';
 		/**
 		 * Enqueue our scripts and styles
 		 */
 		public function enqueue() {
-			wp_enqueue_script( 'gatsby-wp-html5sortable-js', get_template_directory_uri() . '/js/html5sortable.min.js', array(), '1.0', true );
-			wp_enqueue_script( 'gatsby-wp-custom-controls1-js', get_template_directory_uri() . '/js/customizer1.js', array( 'gatsby-wp-html5sortable-js' ), '1.0', true );
-			wp_enqueue_style( 'gatsby-wp-custom-controls-css', get_template_directory_uri() . '/css/customizer.css', array(), '1.0', 'all' );
 
 		}
 		/**
@@ -28,21 +25,24 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 					$reordered_choices[ $value ] = $this->choices[ $value ];
 				}
 			}
-				$reordered_choices = array_merge( $reordered_choices, array_diff_assoc( $this->choices, $reordered_choices ) );
+			$reordered_choices = array_merge( $reordered_choices, array_diff_assoc( $this->choices, $reordered_choices ) );
 
 			?>
 			<div class="pill_checkbox_control">
-				<?php if ( ! empty( $this->label ) ) { ?>
+			<?php if ( ! empty( $this->label ) ) { ?>
 					<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
 				<?php } ?>
-				<?php if ( ! empty( $this->description ) ) { ?>
+			<?php if ( ! empty( $this->description ) ) { ?>
 					<span class="customize-control-description"><?php echo esc_html( $this->description ); ?></span>
 				<?php } ?>
 				<input type="hidden" id="<?php echo esc_attr( $this->id ); ?>" name="<?php echo esc_attr( $this->id ); ?>" value="<?php echo esc_attr( $this->value() ); ?>" class="customize-control-sortable-pill-checkbox" <?php $this->link(); ?> />
 				<div class="sortable_pills fullwidth_pills sortable">
-				<?php foreach ( $reordered_choices as $key => $value ) { ?>
-					<label class="checkbox-label">
-						<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( esc_attr( $key ), $saved_choices, true ), true ); ?> class="sortable-pill-checkbox"/>
+			<?php foreach ( $reordered_choices as $key => $value ) { ?>
+					<label class="checkbox-label <?php echo in_array( esc_attr( $key ), $saved_choices, true ) ? 'active' : ''; ?>">
+						<span class="drag-handle js-drag-handle"><i class="fas fa-grip-vertical"></i></span>
+						<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( esc_attr( $key ), $saved_choices, true ), true ); ?> class="sortable-pill-checkbox"/>						
+							<i class="far fa-check-square"></i>						
+							<i class="far fa-square"></i>					
 						<span class="sortable-pill-title"><?php echo esc_attr( $value ); ?></span>
 					</label>
 				<?php	} ?>
@@ -71,10 +71,7 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 			}
 		}
 		public function enqueue() {
-			wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/569911808f.js' );
 
-			wp_enqueue_script( 'gatsby-wp-custom-controls3-js', get_template_directory_uri() . '/build/customizer.js', array(), '1.0', true );
-			wp_enqueue_style( 'gatsby-wp-custom-controls-css', get_template_directory_uri() . '/css/customizer.css', array(), '1.0', 'all' );
 		}
 		public function render_content() {
 			$saved_order     = explode( ',', $this->manager->get_setting( $this->hidden )->value() );
@@ -133,18 +130,18 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 			<?php if ( ! empty( $this->label ) ) { ?>
 						<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
 					<?php } ?>
-				<?php if ( ! empty( $this->description ) ) { ?>
+			<?php if ( ! empty( $this->description ) ) { ?>
 						<span class="customize-control-description"><?php echo esc_html( $this->description ); ?></span>
 					<?php } ?>
 				<div class="sortable">
-				<?php
-				foreach ( $render as $id => $value ) {
-					if ( $id === $this->hidden ) {
-						?>
+			<?php
+			foreach ( $render as $id => $value ) {
+				if ( $id === $this->hidden ) {
+					?>
 								<input type="hidden" id="<?php echo esc_attr( $id ); ?>" class="js-output" name="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $value['value'] ); ?>" <?php $this->link( $value['index'] ); ?> />
-							<?php
-					} else {
-						?>
+						<?php
+				} else {
+					?>
 						<label data-contains-setting="<?php echo esc_attr( $value['key'] ); ?>" class="<?php echo $value['value'] ? 'not-empty' : ''; ?>">
 							<span class="drag-handle js-drag-handle"><i class="fas fa-grip-vertical"></i></span>
 							<i class="fab fa-<?php echo esc_attr( $value['key'] ); ?>"></i>
@@ -158,7 +155,56 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 					<?php } ?>
 				</div>
 				</div>
+				<?php
+		}
+	}
+	class Gatsby_WP_Color_Control extends WP_Customize_Control {
+		/**
+		 * Type.
+		 *
+		 * @var string
+		 */
+		public $type = 'gatsby_wp_color';
+
+		/**
+		 * Refresh the parameters passed to the JavaScript via JSON.
+		 *
+		 * @since 3.4.0
+		 * @uses WP_Customize_Control::to_json()
+		 */
+		public function to_json() {
+			parent::to_json();
+			$this->json['defaultValue'] = $this->setting->default;
+		}
+
+		/**
+		 * Don't render the control content from PHP, as it's rendered via JS on load.
+		 *
+		 * @since 3.4.0
+		 */
+		public function render_content() {
+			?>
+			
+			<label for='<?php echo 'input-' . esc_attr( $this->settings['default']->id ); ?>'>
+				<?php
+				// Output the label and description if they were passed in.
+				if ( isset( $this->label ) && '' !== $this->label ) {
+					echo '<span class="customize-control-title">' . sanitize_text_field( $this->label ) . '</span>';
+				}
+				if ( isset( $this->description ) && '' !== $this->description ) {
+					echo '<span class="description customize-control-description">' . sanitize_text_field( $this->description ) . '</span>';
+				}
+				?>
+				</label>
+				<div>
+				<input id='<?php echo 'input-' . esc_attr( $this->settings['default']->id ); ?>' class="alpha-color-control" type="color" <?php $this->link(); ?>  />
+				
+				<button type="button" data-setting="<?php echo esc_attr( $this->settings['default']->id ); ?>" data-default-color="<?php echo esc_attr( $this->settings['default']->default ); ?>"><i class="fas fa-redo"></i> Default</button>
+			</div>
+				
 			<?php
 		}
+
+
 	}
 }
