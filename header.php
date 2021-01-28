@@ -6,7 +6,7 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
- * @package gatsby-wp
+ * @package headlesswp
  */
 
 ?>
@@ -23,7 +23,7 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'gatsby-wp' ); ?></a>
+	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'headlesswp' ); ?></a>
 	<header id="masthead" class="site-header">
 		
 
@@ -31,13 +31,13 @@
 			<div class="container-fluid">
 				<a class="navbar-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+	  <span class="navbar-toggler-icon"></span>
+	</button>
 				<?php
 				wp_nav_menu(
 					array(
-						'theme_location' => 'primary',
-						'menu_id'        => 'primary-menu',
+						'theme_location'  => 'primary',
+						'menu_id'         => 'primary-menu',
 						'container'       => 'div',
 						'container_class' => 'collapse navbar-collapse',
 						'container_id'    => 'navbarToggler',

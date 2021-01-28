@@ -228,7 +228,7 @@ class DraggableInputs {
 
 wp.customize.bind("ready", function () {
   const colorControls = document.querySelectorAll(
-    ".customize-control-gatsby_wp_color"
+    ".customize-control-headlesswp_color"
   )
 
   colorControls.forEach((c) => {
@@ -241,9 +241,9 @@ wp.customize.bind("ready", function () {
   })
 
   const sortableSocialLinks = new DraggableInputs({
-    elSelector: ".customize-control-wp-gatsby_all_follows label",
-    outputSelector: "#gatsby-wp-social_follow_order",
-    sortableSelector: ".customize-control-wp-gatsby_all_follows .sortable",
+    elSelector: ".customize-control-headlesswp_all_follows label",
+    outputSelector: "#headlesswp-social_follow_order",
+    sortableSelector: ".customize-control-headlesswp_all_follows .sortable",
     validationFunction: isValidHttpUrl,
     errorMessage: "This is not a valid url.",
     sortableOptions: {
@@ -255,7 +255,7 @@ wp.customize.bind("ready", function () {
   })
 
   const sortableWidgets = document.querySelectorAll(
-    ".customize-control-wp-gatsby_sortable_checkboxes[id]"
+    ".customize-control-headlesswp_sortable_checkboxes[id]"
   )
   for (const s of sortableWidgets) {
     new DraggableCheckboxes(s, {

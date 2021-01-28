@@ -1,25 +1,21 @@
 <?php
 if ( class_exists( 'WP_Customize_Control' ) ) {
-	class Sortable_Checkboxes_Custom_Control extends WP_Customize_Control {
+	class HeadlessWP_Sortable_Checkboxes_Custom_Control extends WP_Customize_Control {
 		/**
 		 * The type of control being rendered
 		 */
-		public $type = 'wp-gatsby_sortable_checkboxes';
+		public $type = 'headlesswp_sortable_checkboxes';
 		/**
 		 * Enqueue our scripts and styles
 		 */
-		public function enqueue() {
 
-		}
 		/**
 		 * Render the control in the customizer
 		 */
 		public function render_content() {
 			$reordered_choices = array();
 			$saved_choices     = explode( ',', esc_attr( $this->value() ) );
-
 			// Order the checkbox choices based on the saved order.
-
 			foreach ( $saved_choices as $key => $value ) {
 				if ( isset( $this->choices[ $value ] ) ) {
 					$reordered_choices[ $value ] = $this->choices[ $value ];
@@ -53,11 +49,11 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 	}
 
 
-	class WP_Customize_All_Follows extends WP_Customize_Control {
+	class HeadlessWP_All_Follows_Custom_Control extends WP_Customize_Control {
 		private $labels = array();
 		private $keys   = array();
 		private $hidden = false;
-		public $type    = 'wp-gatsby_all_follows';
+		public $type    = 'headlesswp_all_follows';
 		public function __construct( $manager, $id, $args = array(), $options = array() ) {
 			parent::__construct( $manager, $id, $args );
 			if ( isset( $args['labels'] ) ) {
@@ -70,9 +66,7 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 				$this->hidden = $args['hidden'];
 			}
 		}
-		public function enqueue() {
-
-		}
+		public function enqueue() {}
 		public function render_content() {
 			$saved_order     = explode( ',', $this->manager->get_setting( $this->hidden )->value() );
 			$prepare_render  = array();
@@ -158,13 +152,13 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 				<?php
 		}
 	}
-	class Gatsby_WP_Color_Control extends WP_Customize_Control {
+	class HeadlessWP_Color_Custom_Control extends WP_Customize_Control {
 		/**
 		 * Type.
 		 *
 		 * @var string
 		 */
-		public $type = 'gatsby_wp_color';
+		public $type = 'headlesswp_color';
 
 		/**
 		 * Refresh the parameters passed to the JavaScript via JSON.

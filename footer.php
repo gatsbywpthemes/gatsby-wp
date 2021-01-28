@@ -6,23 +6,23 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
- * @package gatsby-wp
+ * @package headlesswp
  */
 
 ?>
 
 	<footer id="colophon" class="site-footer text-white bg-dark p-4">
 		<div class="site-info container text-center">
-			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'gatsby-wp' ) ); ?>">
+			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'headlesswp' ) ); ?>">
 				<?php
 				/* translators: %s: CMS name, i.e. WordPress. */
-				printf( esc_html__( 'Proudly powered by %s', 'gatsby-wp' ), 'WordPress' );
+				printf( esc_html__( 'Proudly powered by %s', 'headlesswp' ), 'WordPress' );
 				?>
 			</a>
 			<span class="sep"> | </span>
 				<?php
 				/* translators: 1: Theme name, 2: Theme author. */
-				printf( esc_html__( 'Theme: %1$s by %2$s.', 'gatsby-wp' ), 'gatsby-wp', '<a href="http://underscores.me/">Underscores.me</a>' );
+				printf( esc_html__( 'Theme: %1$s by %2$s.', 'headlesswp' ), 'headlesswp', '<a href="http://underscores.me/">Underscores.me</a>' );
 				?>
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->

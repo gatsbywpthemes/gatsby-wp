@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/customizerpreview.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/customizer-preview.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1291,10 +1291,10 @@ else {}
 
 /***/ }),
 
-/***/ "./src/customizerpreview.js":
-/*!**********************************!*\
-  !*** ./src/customizerpreview.js ***!
-  \**********************************/
+/***/ "./src/customizer-preview.js":
+/*!***********************************!*\
+  !*** ./src/customizer-preview.js ***!
+  \***********************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1363,4 +1363,4 @@ settings.forEach(function (s) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=customizerpreview.js.map
+//# sourceMappingURL=customizer-preview.js.map

@@ -4,12 +4,12 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package gatsby-wp
+ * @package headlesswp
  */
 
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class('p-4 border'); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class( 'p-4 border' ); ?>>
 	<header class="entry-header">
 		<?php
 		if ( is_singular() ) :
@@ -22,24 +22,24 @@
 			?>
 			<div class="entry-meta mb-4">
 				<?php
-				gatsby_wp_posted_on();
-				gatsby_wp_posted_by();
+				headlesswp_posted_on();
+				headlesswp_posted_by();
 				?>
 			</div><!-- .entry-meta -->
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
-	<?php gatsby_wp_post_thumbnail(); ?>
+	<?php headlesswp_post_thumbnail(); ?>
 
 	<div class="entry-content">
 		<?php
-		is_single() ? 
+		is_single() ?
 			the_content() :
 			the_excerpt(
 				sprintf(
 					wp_kses(
 						/* translators: %s: Name of current post. Only visible to screen readers */
-						__( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'gatsby-wp' ),
+						__( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'headlesswp' ),
 						array(
 							'span' => array(
 								'class' => array(),
@@ -52,7 +52,7 @@
 
 		wp_link_pages(
 			array(
-				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'gatsby-wp' ),
+				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'headlesswp' ),
 				'after'  => '</div>',
 			)
 		);
@@ -60,6 +60,6 @@
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer border-top pt-3">
-		<?php gatsby_wp_entry_footer(); ?>
+		<?php headlesswp_entry_footer(); ?>
 	</footer><!-- .entry-footer -->
 </article><!-- #post-<?php the_ID(); ?> -->

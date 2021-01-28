@@ -1,8 +1,8 @@
 <?php
-function gatsby_wp_register_meta() {
+function headlesswp_register_meta() {
 	register_meta(
 		'post',
-		'_gatsby_wp_skip_title_metafield',
+		'_headlesswp_skip_title_metafield',
 		array(
 			'show_in_rest'      => true,
 			'type'              => 'boolean',
@@ -16,16 +16,16 @@ function gatsby_wp_register_meta() {
 		)
 	);
 }
-add_action( 'init', 'gatsby_wp_register_meta' );
+add_action( 'init', 'headlesswp_register_meta' );
 
 
 add_action(
 	'add_meta_boxes',
 	function() {
 		add_meta_box(
-			'gatsby_wp_post_options_metabox',
+			'headlesswp_post_options_metabox',
 			'Post Options',
-			'gatsby_wp_post_options_metabox_html',
+			'headlesswp_post_options_metabox_html',
 			'page',
 			'normal',
 			'default',
@@ -34,33 +34,33 @@ add_action(
 	}
 );
 
-function gatsby_wp_post_options_metabox_html( $post ) {
-	$field_value = get_post_meta( $post->ID, '_gatsby_wp_skip_title_metafield', true );
-	wp_nonce_field( 'gatsby_wp_update_post_metabox', 'gatsby_wp_update_post_nonce' );
+function headlesswp_post_options_metabox_html( $post ) {
+	$field_value = get_post_meta( $post->ID, '_headlesswp_skip_title_metafield', true );
+	wp_nonce_field( 'headlesswp_update_post_metabox', 'headlesswp_update_post_nonce' );
 	?>
 	<p>
-		<label for="gatsby_wp_skip_title_metafield"><?php esc_html_e( 'Skip Title', 'textdomain' ); ?></label>
+		<label for="headlesswp_skip_title_metafield"><?php esc_html_e( 'Skip Title', 'textdomain' ); ?></label>
 		<br />
-		<input class="widefat" type="checkbox" name="gatsby_wp_skip_title_metafield" id="gatsby_wp_skip_title_metafield" <?php echo esc_attr( $field_value ) ? 'checked' : ''; ?> />
+		<input class="widefat" type="checkbox" name="headlesswp_skip_title_metafield" id="headlesswp_skip_title_metafield" <?php echo esc_attr( $field_value ) ? 'checked' : ''; ?> />
 	</p>
 	<?php
 }
 
-function gatsby_wp_save_post_metabox( $post_id, $post ) {
+function headlesswp_save_post_metabox( $post_id, $post ) {
 
 	$edit_cap = get_post_type_object( $post->post_type )->cap->edit_post;
 	if ( ! current_user_can( $edit_cap, $post_id ) ) {
 		return;
 	}
-	if ( ! isset( $_POST['gatsby_wp_update_post_nonce'] ) || ! wp_verify_nonce( $_POST['gatsby_wp_update_post_nonce'], 'gatsby_wp_update_post_metabox' ) ) {
+	if ( ! isset( $_POST['headlesswp_update_post_nonce'] ) || ! wp_verify_nonce( $_POST['headlesswp_update_post_nonce'], 'headlesswp_update_post_metabox' ) ) {
 		return;
 	}
 
 	update_post_meta(
 		$post_id,
-		'_gatsby_wp_skip_title_metafield',
-		array_key_exists( 'gatsby_wp_skip_title_metafield', $_POST )
+		'_headlesswp_skip_title_metafield',
+		array_key_exists( 'headlesswp_skip_title_metafield', $_POST )
 	);
 }
 
-add_action( 'save_post', 'gatsby_wp_save_post_metabox', 10, 2 );
+add_action( 'save_post', 'headlesswp_save_post_metabox', 10, 2 );

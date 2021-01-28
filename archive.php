@@ -4,7 +4,7 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package gatsby-wp
+ * @package headlesswp
  */
 
 get_header();

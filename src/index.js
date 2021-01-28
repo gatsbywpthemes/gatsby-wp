@@ -26,7 +26,7 @@ let PluginMetaFields = (props) => {
 PluginMetaFields = withSelect((select) => {
   return {
     skip_title_metafield: select("core/editor").getEditedPostAttribute("meta")[
-      "_gatsby_wp_skip_title_metafield"
+      "_headlesswp_skip_title_metafield"
     ],
   }
 })(PluginMetaFields)
@@ -36,13 +36,13 @@ PluginMetaFields = withDispatch((dispatch) => {
     onMetaFieldChange: (value) => {
       console.log("onMetaFieldChange", value)
       dispatch("core/editor").editPost({
-        meta: { _gatsby_wp_skip_title_metafield: value },
+        meta: { _headlesswp_skip_title_metafield: value },
       })
     },
   }
 })(PluginMetaFields)
 
-registerPlugin("gatsby-wp-sidebar", {
+registerPlugin("headlesswp-sidebar", {
   icon: (
     <svg viewBox="0 0 225.59 209.12">
       <path
@@ -59,11 +59,11 @@ registerPlugin("gatsby-wp-sidebar", {
     }
     return (
       <>
-        <PluginSidebarMoreMenuItem target="gatsby-wp-sidebar">
+        <PluginSidebarMoreMenuItem target="headlesswp-sidebar">
           {__("Meta Options", "textdomain")}
         </PluginSidebarMoreMenuItem>
         <PluginSidebar
-          name="gatsby-wp-sidebar"
+          name="headlesswp-sidebar"
           title={__("Meta Options", "textdomain")}
         >
           <PluginMetaFields />

@@ -131,7 +131,7 @@ var PluginMetaFields = function PluginMetaFields(props) {
 
 PluginMetaFields = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__["withSelect"])(function (select) {
   return {
-    skip_title_metafield: select("core/editor").getEditedPostAttribute("meta")["_gatsby_wp_skip_title_metafield"]
+    skip_title_metafield: select("core/editor").getEditedPostAttribute("meta")["_headlesswp_skip_title_metafield"]
   };
 })(PluginMetaFields);
 PluginMetaFields = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__["withDispatch"])(function (dispatch) {
@@ -140,13 +140,13 @@ PluginMetaFields = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__["withDisp
       console.log("onMetaFieldChange", value);
       dispatch("core/editor").editPost({
         meta: {
-          _gatsby_wp_skip_title_metafield: value
+          _headlesswp_skip_title_metafield: value
         }
       });
     }
   };
 })(PluginMetaFields);
-Object(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__["registerPlugin"])("gatsby-wp-sidebar", {
+Object(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__["registerPlugin"])("headlesswp-sidebar", {
   icon: Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("svg", {
     viewBox: "0 0 225.59 209.12"
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("path", {
@@ -162,9 +162,9 @@ Object(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__["registerPlugin"])("gatsb
     }
 
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__["PluginSidebarMoreMenuItem"], {
-      target: "gatsby-wp-sidebar"
+      target: "headlesswp-sidebar"
     }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Options", "textdomain")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__["PluginSidebar"], {
-      name: "gatsby-wp-sidebar",
+      name: "headlesswp-sidebar",
       title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Options", "textdomain")
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(PluginMetaFields, null)));
   }

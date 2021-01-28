@@ -557,8 +557,8 @@ label:not(.not-empty) .drag-handle {
 input.invalid {
   background-color: #ff000038;
 }
-.customize-control-wp-gatsby_sortable_checkboxes label,
-.customize-control-wp-gatsby_all_follows label {
+.customize-control-headlesswp_sortable_checkboxes label,
+.customize-control-headlesswp_all_follows label {
   margin-bottom: 0.5rem;
   background: white;
   border-radius: 4px;
@@ -567,36 +567,36 @@ input.invalid {
   align-items: center;
   transition: 0.6s;
 }
-.customize-control-wp-gatsby_sortable_checkboxes label:not(.active) {
+.customize-control-headlesswp_sortable_checkboxes label:not(.active) {
   background: transparent;
   border: 1px solid;
 }
-.customize-control-wp-gatsby_sortable_checkboxes .active {
+.customize-control-headlesswp_sortable_checkboxes .active {
   background: #8919f9;
 }
 
-.customize-control-wp-gatsby_sortable_checkboxes .active * {
+.customize-control-headlesswp_sortable_checkboxes .active * {
   color: white;
 }
-.customize-control-wp-gatsby_sortable_checkboxes .active .fa-square,
-.customize-control-wp-gatsby_sortable_checkboxes label .fa-check-square {
+.customize-control-headlesswp_sortable_checkboxes .active .fa-square,
+.customize-control-headlesswp_sortable_checkboxes label .fa-check-square {
   display: none;
 }
-.customize-control-wp-gatsby_sortable_checkboxes label .fa-square,
-.customize-control-wp-gatsby_sortable_checkboxes .active .fa-check-square {
+.customize-control-headlesswp_sortable_checkboxes label .fa-square,
+.customize-control-headlesswp_sortable_checkboxes .active .fa-check-square {
   display: block;
 }
-.customize-control-wp-gatsby_all_follows label > * {
+.customize-control-headlesswp_all_follows label > * {
   margin: 0 1rem;
 }
-.customize-control-wp-gatsby_all_follows label input[type="url"] {
+.customize-control-headlesswp_all_follows label input[type="url"] {
   width: 100%;
   margin: 0.3rem 0;
 }
-.customize-control-wp-gatsby_all_follows .fa-grip-vertical {
+.customize-control-headlesswp_all_follows .fa-grip-vertical {
   font-size: 1rem;
 }
-.customize-control-wp-gatsby_all_follows label i {
+.customize-control-headlesswp_all_follows label i {
   font-size: 1.5rem;
 }
 .drag-handle {
