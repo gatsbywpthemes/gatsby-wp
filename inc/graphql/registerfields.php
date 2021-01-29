@@ -1,4 +1,6 @@
 <?php
+
+
 add_action(
 	'graphql_register_types',
 	function() use ( $headlesswp_customizer_config ) {
@@ -60,6 +62,20 @@ add_action(
 		);
 
 		register_graphql_object_type(
+			'GatsbyWPThemesSidebar',
+			array(
+				'description' => __(
+					'CSS Theme',
+					'headlesswp'
+				),
+				'fields'      => array(
+					'name'    => array( 'type' => 'String' ),
+					'widgets' => array( 'type' => array( 'list_of' => 'String' ) ),
+				),
+			)
+		);
+
+		register_graphql_object_type(
 			'GatsbyWPThemesConfig',
 			array(
 				'description' => __(
@@ -71,8 +87,7 @@ add_action(
 					'logo'                 => array( 'type' => 'MediaItem' ),
 					'darkModeLogo'         => array( 'type' => 'MediaItem' ),
 					'favicon'              => array( 'type' => 'MediaItem' ),
-					'slideMenuWidgets'     => array( 'type' => array( 'list_of' => 'String' ) ),
-					'sidebarWidgets'       => array( 'type' => array( 'list_of' => 'String' ) ),
+					'sidebars'             => array( 'type' => array( 'list_of' => 'GatsbyWPThemesSidebar' ) ),
 					'addWordPressComments' => array( 'type' => 'Boolean' ),
 					'addWordPressSearch'   => array( 'type' => 'Boolean' ),
 					'socialFollowLinks'    => array( 'type' => array( 'list_of' => 'GatsbyWPThemesSocial' ) ),
@@ -88,16 +103,40 @@ add_action(
 				'type'        => 'GatsbyWPThemesConfig',
 				'description' => __( 'Example field added to the RootQuery Type', 'headlesswp' ),
 				'resolve'     => function( $root, $args, $context, $info ) use ( $headlesswp_customizer_config ) {
-					global $wp_rewrite;
 					return array(
-						'paginationPrefix'     => $wp_rewrite->pagination_base,
+						'paginationPrefix'     => function () {
+							global $wp_rewrite;
+							return $wp_rewrite->pagination_base;
+						},
 						'logo'                 => $context->get_loader( 'post' )->load_deferred( get_option( 'headlesswp-logo' ) ),
 						'darkModeLogo'         => $context->get_loader( 'post' )->load_deferred( get_option( 'headlesswp-dark_mode_logo' ) ),
 						'favicon'              => $context->get_loader( 'post' )->load_deferred( get_option( 'site_icon' ) ),
-						'slideMenuWidgets'     => explode( ',', get_theme_mod( 'headlesswp-slide_menu_widgets' ) ),
-						'sidebarWidgets'       => explode( ',', get_theme_mod( 'headlesswp-sidebar_widgets' ) ),
-						'addWordPressComments' => get_option( 'headlesswp-add_wp_comments', true ),
-						'addWordPressSearch'   => get_option( 'headlesswp-add_wp_search', true ),
+						'sidebars'             => function() use ( $headlesswp_customizer_config ) {
+							if ( $headlesswp_customizer_config['widgets']['supports'] ) {
+								$sidebars = array();
+								foreach ( $headlesswp_customizer_config['widgets']['areas'] as $area => $settings ) {
+									$widgets_string = get_theme_mod( "headlesswp-$area", $settings['defaults'] );
+									array_push(
+										$sidebars,
+										array(
+											'name'    => $area,
+											'widgets' => explode(
+												',',
+												$widgets_string
+											),
+										)
+									);
+								}
+								return $sidebars;
+							}
+							return array();
+						},
+						'addWordPressComments' => function() use ( $headlesswp_customizer_config ) {
+							return get_option( 'headlesswp-add_wp_comments', $headlesswp_customizer_config['add_wp_comments']['supports'] && $headlesswp_customizer_config['add_wp_comments']['default'] );
+						},
+						'addWordPressSearch'   => function() use ( $headlesswp_customizer_config ) {
+							return get_option( 'headlesswp-add_wp_search', $headlesswp_customizer_config['add_wp_search']['supports'] && $headlesswp_customizer_config['add_wp_search']['default'] );
+						},
 						'socialFollowLinks'    => function() {
 							$social_names_in_string = get_option( 'headlesswp-social_follow_order', '' );
 							$social_names = explode( ',', $social_names_in_string );
