@@ -12,10 +12,7 @@
     notification: {},
     targetLink: {},
     installed: [],
-    doConfig: false,
-    doImport: false,
     installs: {},
-    configs: {},
     init: function () {
       var self = this
 
@@ -45,12 +42,6 @@
       self.doInstall = !_.isUndefined($(self.targetLink).attr("data-install"))
         ? "true" === $(self.targetLink).attr("data-install")
         : false
-      self.doConfig = !_.isUndefined($(self.targetLink).attr("data-configure"))
-        ? "true" === $(self.targetLink).attr("data-configure")
-        : false
-      self.doImport = !_.isUndefined($(self.targetLink).attr("data-import"))
-        ? "true" === $(self.targetLink).attr("data-import")
-        : false
       if (!_.isUndefined($(self.targetLink).attr("data-reload"))) {
         self.reloadOnSuccessfulEnd =
           "true" === $(self.targetLink).attr("data-reload")
@@ -74,43 +65,12 @@
 
       installer.installPlugins()
     },
-    installPlugins: function (i) {
+    installPlugins: function (i = 0) {
       var self = this
-
-      if (!self.doInstall) {
-        self.configurePlugins()
-        return
-      }
-
-      if (_.isUndefined(i)) {
-        i = 0
-      }
-
       if (self.installs[i]) {
         $.ajax(self.installs[i])
           .done(function (response) {
             console.log(response)
-            if ("string" === typeof response) {
-              var regex = /\{"success":(true|false),"data":\{"plugin":"([a-z\d-_]*)"/g
-              var matches = regex.exec(response)
-              if (matches.length > 2) {
-                response = {
-                  success: matches[1],
-                  data: {
-                    plugin: matches[2],
-                    message: yaga_setup_scriptparams.strings.success,
-                  },
-                }
-              } else {
-                response = {
-                  success: false,
-                  data: {
-                    plugin: "",
-                    message: "",
-                  },
-                }
-              }
-            }
 
             if (response.success) {
               self.installed.push(response.data.plugin)
@@ -189,9 +149,7 @@
   }
 
   $(document).ready(function () {
-    $(".js-pht-setup__link").click(function (event) {
-      event.preventDefault()
-
+    $(".js-pht-setup__link").click(function () {
       installer.targetLink = $(this)
       installer.notification = $(".pht-feedback")
       installer.init()

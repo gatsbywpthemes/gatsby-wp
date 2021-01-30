@@ -12,25 +12,53 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 
 		public $plugin_screen_hook_suffix = null;
 
-		public $import_path;
-
-		public $import_path_uri;
-
 		private $dismiss_notice_meta_field_slug = 'yaga_setup_dismissed_notice';
 
 		private $theme_name;
 
 		private $all_plugins = array(
-			'cmb2'           => array(
-				'slug'   => 'cmb2',
-				'name'   => 'CMB2',
+			'wp-gatsby' => array(
+				'slug'   => 'wp-gatsby/wp-gatsby.php',
+				'name'   => 'WP Gatsby',
 				'source' => 'repo',
+				'file_path' => 'wp-gatsby/wp-gatsby.php',
+				'required' => true,
+			),
+			'wp-graphql' => array(
+				'slug'   => 'wp-graphql',
+				'name'   => 'WPGraphQL',
+				'source' => 'repo',
+				'file_path' => 'wp-graphql/wp-graphql.php',
+				'required' => true,
+			),
+			'code-syntax-block' => array(
+				'slug'   => 'code-syntax-block',
+				'name'   => 'Code Syntax Block',
+				'source' => 'repo',
+				'file_path' => 'code-syntax-block/index.php',
+				'required' => false,
 			),
 			'contact-form-7' => array(
 				'slug'   => 'contact-form-7',
 				'name'   => 'Contact Form 7',
 				'source' => 'repo',
+				'file_path' => 'contact-form-7/wp-contact-form-7.php',
+				'required' => false,
 			),
+			'wordpress-seo' => array(
+				'slug'   => 'wordpress-seo',
+				'name'   => 'Yoast SEO',
+				'source' => 'repo',
+				'file_path' => 'wordpress-seo/wp-seo.php',
+				'required' => false
+			),
+				'add-wpgraphql-seo' => array(
+				'slug'   => 'add-wpgraphql-seo',
+				'name'   => 'Add WPGraphQL SEO',
+				'source' => 'repo',
+				'file_path' => 'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
+				'required' => false,
+			),	
 		);
 
 		private function __construct() {
@@ -58,7 +86,8 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 			// Make sure things get reset on switch theme.
 
 			add_action( 'switch_theme', array( $this, 'clean_setup' ) );
-
+			
+			//$this->plugin_installer('add-wpgraphql-seo');
 		}
 
 		/**
@@ -83,8 +112,7 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 			);
 
 			foreach ( $this->all_plugins as $slug => $plugin ) {
-				$file_path = $this->_get_plugin_basename_from_slug( $slug );
-				if ( ! is_plugin_active( $file_path ) ) {
+				if ( ! is_plugin_active( $plugin['file_path'] ) ) {
 					$complete['all_plugins_installed'] = false;
 					break;
 				}
@@ -99,12 +127,14 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 				return;
 			}
 
-			$this->plugin_screen_hook_suffix[] = add_theme_page(
+			$this->plugin_screen_hook_suffix[] = add_menu_page(
 				$this->strings['page_title'],          // Page title.
 				$this->strings['menu_title'],          // Menu title.
 				'edit_theme_options',                  // Capability.
 				$this->menu,                           // Menu slug.
-				array( $this, 'setup_page' ) // Callback.
+				array( $this, 'setup_page' ), // Callback.
+				"none",
+				4
 			);
 
 		}
@@ -115,7 +145,7 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 				array(
 					'page' => urlencode( $this->menu ),
 				),
-				esc_url( self_admin_url( 'themes.php' ) )
+				esc_url( self_admin_url( 'admin.php' ) )
 			);
 
 			return $url;
@@ -210,16 +240,9 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 			<div class="pht-setup__inner">
 					<?php
 
-					echo '<div class="pht-box pht-setup__intro">';
+				
 					echo '<h3 class="pht-setup__title pht-center">' . sprintf( esc_html__( 'Welcome to the %s Setup', 'yaga' ), $this->theme_name ) . '</h3>';
-					echo '<p class="pht-larger pht-center">' . sprintf( esc_html__( '%s ships with two PeHaa Themes plugins that enhance the theme functionality.', 'yaga' ), $this->theme_name ) . '</p>';
-					echo '<ul class="pht-setup__list">';
-					echo '<li><strong>' . esc_html__( 'PeHaa Themes Simple Post Types', 'yaga' ) . '</strong> ' . esc_html__( 'allows to easily add any custom post type (like project, recipe, destination,...).', 'yaga' ) . '</li>';
 
-					echo '<li>' . sprintf( esc_html__( '%s theme uses custom metaboxes that are activated with the CMB2 plugin.', 'yaga' ), $this->theme_name ) . '</li>';
-					echo '<li>' . sprintf( esc_html__( '%s theme uses the Contact Form 7 plugin. We include it here.', 'yaga' ), $this->theme_name ) . '</li>';
-					echo '</ul>';
-					echo '</div>';
 
 					$img_atts = array(
 						'alt'   => esc_attr__( 'Loading...Please wait', 'yaga' ),
@@ -362,13 +385,11 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 			return $slug;
 		}
 
-		private function is_plugin_installed( $plugin ) {
-			$plugins = get_plugins( '/' . $this->get_plugin_dir( $plugin ) );
-			if ( ! empty( $plugins ) ) {
-				return true;
-			}
-			return false;
+		private function is_plugin_installed($path) {
+			$all = get_plugins();
+			return array_key_exists( $path, $all ) || in_array( $path, $all, true );
 		}
+
 		private function install_plugin( $plugin ) {
 			$api = plugins_api(
 				'plugin_information',
@@ -391,8 +412,8 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 				)
 			);
 
-			// Replace new \Plugin_Installer_Skin with new Quiet_Upgrader_Skin when output needs to be suppressed.
-			$skin     = new Quiet_Upgrader_Skin( array( 'api' => $api ) );
+
+			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
 			$error    = $upgrader->install( $api->download_link );
 			/*
@@ -407,77 +428,57 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 			}
 		}
 
-		public function plugin_installer() {
+		public function plugin_installer($plugin = false) {
 
-			if ( ! isset( $_POST['plugin'] ) ) {
+			if (!$plugin) {
+
+			 if ( ! isset( $_POST['plugin'] ) ) {
 				return;
 			}
 
 			$plugin = $_POST['plugin'];
+
 
 			check_ajax_referer( 'yaga-setup-install-' . $plugin, 'nonce' );
 
 			if ( ! isset( $this->all_plugins[ $plugin ] ) ) {
 				return;
 			}
+		}
 
 			$plugin_slug   = $this->all_plugins[ $plugin ]['slug']; // Plugin slug.
 			$plugin_name   = $this->all_plugins[ $plugin ]['name']; // Plugin name.
 			$plugin_source = $this->all_plugins[ $plugin ]['source']; // Plugin source.
-
+			$plugin_file_path = $this->all_plugins[ $plugin ]['file_path']; // Plugin file path.
 			if ( ! isset( $plugin_slug ) || ! isset( $plugin_name ) || ! isset( $plugin_source ) ) {
 				return;
 			}
-						require_once ABSPATH . 'wp-load.php';
+			require_once ABSPATH . 'wp-load.php';
 			require_once ABSPATH . 'wp-includes/pluggable.php';
 			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			require_once ABSPATH . 'wp-admin/includes/misc.php';
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-			require_once get_template_directory() . '/inc/setup/class-pht-plugin-installer-skin.php';
 			$already_installed_as = false;
 
-			$keys = array_keys( get_plugins() );
-			foreach ( $keys as $key ) {
-				if ( preg_match( '|^' . $plugin . '/|', $key ) ) {
-
-					if ( is_plugin_active( $key ) ) {
-						wp_send_json_success(
-							array(
-								'plugin'  => $plugin,
-								'message' => esc_html__(
-									'Plugin already installed and activated.',
-									'yaga'
-								),
-							)
-						);
-					}
-					$already_installed_as = $key;
-					continue;
-				}
+			if ( is_plugin_active( $plugin_file_path ) ) {
+				wp_send_json_success(
+					array(
+						'plugin'  => $plugin,
+						'message' => esc_html__(
+							'Plugin already installed and activated.',
+							'yaga'
+						),
+					)
+				);
 			}
 
-			$plugin_mainfile = trailingslashit( WP_PLUGIN_DIR ) . $plugin;
-			if ( $already_installed_as && is_plugin_active( $already_installed_as ) ) {
-				// Make sure the plugin is still there (files could be removed without WordPress noticing)
-				$error = validate_plugin( $already_installed_as );
-				var_dump( $error );
-				if ( ! is_wp_error( $error ) ) {
-					wp_send_json_error(
-						array(
-							'plugin'  => $plugin,
-							'message' => 'Something went wrong (validate)',
-						)
-					);
-				}
-			}
-
-			// Install if neccessary.
-			if ( ! $already_installed_as ) {
-				ob_start();
+			if ($this->is_plugin_installed($plugin_file_path)) {
+				$already_installed_as = $plugin_file_path;
+			} else {
+				// install here
 				$already_installed_as = $this->install_plugin( $plugin );
-					ob_get_clean();
 				if ( is_wp_error( $already_installed_as ) ) {
 					wp_send_json_error(
 						array(
@@ -487,7 +488,6 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 					);
 				}
 			}
-			// Now we activate, when install has been successfull.
 
 			$error = validate_plugin( $already_installed_as );
 			if ( is_wp_error( $error ) ) {
@@ -504,9 +504,7 @@ if ( ! class_exists( 'Yaga_Setup' ) ) {
 					)
 				);
 			}
-			ob_start();
 			$error = activate_plugin( $already_installed_as );
-			ob_get_clean();
 			if ( is_wp_error( $error ) ) {
 				wp_send_json_error(
 					array(
