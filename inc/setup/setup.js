@@ -19,16 +19,17 @@
       self.installs = yaga_setup_scriptparams.all_plugins.map(
         ({ slug, nonce }) => {
           return {
-            type: "POST",
-            url: ajaxurl,
-            data: {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Cache-Control": "no-cache",
+            },
+            body: new URLSearchParams({
               plugin: slug,
               action: "yaga_setup_plugin_installer",
               nonce,
-            },
-            success: function (response, status, jqXHR) {
-              defaultSuccess(response)
-            },
+            }),
           }
         }
       )
@@ -68,10 +69,13 @@
     installPlugins: function (i = 0) {
       var self = this
       if (self.installs[i]) {
-        $.ajax(self.installs[i])
-          .done(function (response) {
+        fetch(ajaxurl, self.installs[i])
+          .then((response) => {
             console.log(response)
-
+            return response.json()
+          })
+          .then((response) => {
+            console.log(response)
             if (response.success) {
               self.installed.push(response.data.plugin)
             }
@@ -86,12 +90,10 @@
                 "</div>"
             )
 
-            setTimeout(function () {
-              self.installPlugins(i + 1)
-            }, 1000)
+            self.installPlugins(i + 1)
           })
-          .fail(function (e) {
-            console.log(e)
+          .catch((err) => {
+            console.log(err)
             self.stopAction()
             self.notification.append(
               "<div class='" +
@@ -115,6 +117,8 @@
           )
           $(".js-pht--visible").removeClass("js-pht--visible")
           return
+        } else {
+          self.terminate()
         }
       }
     },
