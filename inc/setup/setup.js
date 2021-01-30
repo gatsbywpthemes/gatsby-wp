@@ -1,0 +1,200 @@
+/* global wp */
+/* eslint-disable */
+;(function ($) {
+  "use strict"
+  console.log("hello", yaga_setup_scriptparams)
+  var defaultSuccess = function (response) {
+    console.log(response)
+  }
+
+  var installer = {
+    reloadOnSuccessfulEnd: true,
+    notification: {},
+    targetLink: {},
+    installed: [],
+    doConfig: false,
+    doImport: false,
+    installs: {},
+    configs: {},
+    init: function () {
+      var self = this
+
+      self.installs = yaga_setup_scriptparams.all_plugins.map(
+        ({ slug, nonce }) => {
+          return {
+            type: "POST",
+            url: ajaxurl,
+            data: {
+              plugin: slug,
+              action: "yaga_setup_plugin_installer",
+              nonce,
+            },
+            success: function (response, status, jqXHR) {
+              defaultSuccess(response)
+            },
+          }
+        }
+      )
+
+      console.log(self.installs)
+
+      if ({} === self.targetLink) {
+        return
+      }
+
+      self.doInstall = !_.isUndefined($(self.targetLink).attr("data-install"))
+        ? "true" === $(self.targetLink).attr("data-install")
+        : false
+      self.doConfig = !_.isUndefined($(self.targetLink).attr("data-configure"))
+        ? "true" === $(self.targetLink).attr("data-configure")
+        : false
+      self.doImport = !_.isUndefined($(self.targetLink).attr("data-import"))
+        ? "true" === $(self.targetLink).attr("data-import")
+        : false
+      if (!_.isUndefined($(self.targetLink).attr("data-reload"))) {
+        self.reloadOnSuccessfulEnd =
+          "true" === $(self.targetLink).attr("data-reload")
+      }
+
+      self.targetLink
+        .addClass("pht-setup__link--deactivated")
+        .parent()
+        .siblings()
+        .slideUp(100)
+
+      $(".js-pht--hidden").addClass("js-pht--visible")
+
+      installer.notification.html(
+        "<p class='" +
+          yaga_setup_scriptparams.classes.start +
+          "'>" +
+          yaga_setup_scriptparams.strings.start +
+          "</p>"
+      )
+
+      installer.installPlugins()
+    },
+    installPlugins: function (i) {
+      var self = this
+
+      if (!self.doInstall) {
+        self.configurePlugins()
+        return
+      }
+
+      if (_.isUndefined(i)) {
+        i = 0
+      }
+
+      if (self.installs[i]) {
+        $.ajax(self.installs[i])
+          .done(function (response) {
+            console.log(response)
+            if ("string" === typeof response) {
+              var regex = /\{"success":(true|false),"data":\{"plugin":"([a-z\d-_]*)"/g
+              var matches = regex.exec(response)
+              if (matches.length > 2) {
+                response = {
+                  success: matches[1],
+                  data: {
+                    plugin: matches[2],
+                    message: yaga_setup_scriptparams.strings.success,
+                  },
+                }
+              } else {
+                response = {
+                  success: false,
+                  data: {
+                    plugin: "",
+                    message: "",
+                  },
+                }
+              }
+            }
+
+            if (response.success) {
+              self.installed.push(response.data.plugin)
+            }
+
+            self.notification.append(
+              "<div class='" +
+                yaga_setup_scriptparams.classes.progress +
+                "'><h4>" +
+                yaga_setup_scriptparams.all_plugins[i].name +
+                ":</h4>" +
+                response.data.message +
+                "</div>"
+            )
+
+            setTimeout(function () {
+              self.installPlugins(i + 1)
+            }, 1000)
+          })
+          .fail(function (e) {
+            console.log(e)
+            self.stopAction()
+            self.notification.append(
+              "<div class='" +
+                yaga_setup_scriptparams.classes.fail +
+                "'><p>" +
+                yaga_setup_scriptparams.strings.plugins_fail +
+                "</p></div>"
+            )
+
+            return false
+          })
+      } else {
+        if (i !== self.installed.length) {
+          self.stopAction()
+          self.notification.append(
+            "<div class='" +
+              yaga_setup_scriptparams.classes.fail +
+              "'><p>" +
+              yaga_setup_scriptparams.strings.plugins_fail +
+              "</p></div>"
+          )
+          $(".js-pht--visible").removeClass("js-pht--visible")
+          return
+        }
+      }
+    },
+
+    stopAction: function () {
+      var self = this
+      $(".js-pht--visible").removeClass("js-pht--visible")
+      self.targetLink.slideUp(200)
+      $(".js-pht-start-feedback").slideUp(200)
+    },
+    terminate: function (arg) {
+      var self = this
+      self.stopAction()
+      self.notification.append(
+        "<div class='" +
+          yaga_setup_scriptparams.classes.success +
+          "'><p>" +
+          yaga_setup_scriptparams.strings.finished +
+          "<p>"
+      )
+      if (!self.reloadOnSuccessfulEnd) {
+        return
+      }
+      if (_.isUndefined(arg)) {
+        window.location.replace(yaga_setup_scriptparams.current_page)
+      } else {
+        window.location.replace(
+          yaga_setup_scriptparams.current_page + "&" + arg
+        )
+      }
+    },
+  }
+
+  $(document).ready(function () {
+    $(".js-pht-setup__link").click(function (event) {
+      event.preventDefault()
+
+      installer.targetLink = $(this)
+      installer.notification = $(".pht-feedback")
+      installer.init()
+    })
+  })
+})(jQuery)

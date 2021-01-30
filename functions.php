@@ -261,3 +261,8 @@ function headlesswp_enqueue_assets() {
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'headlesswp_enqueue_assets' );
+
+if ( is_admin() ) {
+	require_once get_template_directory() . '/inc/setup/class-yaga-setup.php';
+	Yaga_Setup::get_instance();
+}
