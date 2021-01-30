@@ -1,0 +1,9 @@
+#adminmenu #toplevel_page_headlesswp-setup-page .wp-menu-image img {
+  opacity: 1;
+  height: 16px;
+}
+
+#adminmenu #toplevel_page_headlesswp-setup-page.current a.menu-top {
+  background: white;
+  color: black;
+}
