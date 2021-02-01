@@ -32,11 +32,12 @@ const loop = async (plugins, trigger) => {
     console.log(notification)
     notification.insertAdjacentHTML(
       "beforeend",
-      "<div class='" +
-        headlesswp_setup_scriptparams.classes.progress +
-        "'>Checking <strong>" +
-        name +
-        "</strong></div>"
+      `<div class="${headlesswp_setup_scriptparams.classes.progress}">
+        Checking
+        <strong>
+         ${name}
+        </strong>
+      </div>`
     )
     try {
       const response = await fetch(url, fetchSettings(slug, nonce))
@@ -44,25 +45,23 @@ const loop = async (plugins, trigger) => {
       console.log(feedback)
       notification.insertAdjacentHTML(
         "beforeend",
-        "<div class='" +
-          headlesswp_setup_scriptparams.classes.success +
-          "'><strong>" +
-          name +
-          ":</strong> - " +
-          feedback.data.message +
-          "</div>"
+        `<div class="${headlesswp_setup_scriptparams.classes.success}">
+          <strong>
+            ${name}:
+          </strong> - 
+          ${feedback.data.message}
+        </div>`
       )
     } catch (error) {
       console.log(error)
       notification.insertAdjacentHTML(
         "beforeend",
-        "<div class='" +
-          headlesswp_setup_scriptparams.classes.fail +
-          "'><strong>" +
-          name +
-          ":</strong> - " +
-          error +
-          "</div>"
+        `<div class="${headlesswp_setup_scriptparams.classes.fail}">
+          <strong>
+            ${name}:
+          </strong> -
+          ${error}
+        </div>`
       )
       withErrors = true
     }
@@ -72,6 +71,11 @@ const loop = async (plugins, trigger) => {
     setTimeout(
       () => window.location.replace(headlesswp_setup_scriptparams.current_page),
       1000
+    )
+  } else {
+    notification.insertAdjacentHTML(
+      "beforeend",
+      `<p style="margin-top: 1.5rem"><strong>${headlesswp_setup_scriptparams.strings.plugins_fail}</strong></p>`
     )
   }
 }

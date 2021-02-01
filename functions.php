@@ -10,6 +10,14 @@
 $headlesswp_all_plugins = apply_filters(
 	'headlesswp_all_plugins',
 	array(
+		/*
+		'bundled-plugin' => array(
+			'slug'      => 'bundled-plugin',
+			'name'      => 'Bundled Example Plugin',
+			'source'    => get_template_directory() . '/plugins/bundled-plugin.zip',
+			'file_path' => 'bundled-plugin/bundled-plugin.php',
+			'required'  => true,
+		),*/
 		'wp-gatsby'         => array(
 			'slug'      => 'wp-gatsby',
 			'name'      => 'WP Gatsby',

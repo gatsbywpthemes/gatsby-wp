@@ -36,9 +36,9 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 			<?php foreach ( $reordered_choices as $key => $value ) { ?>
 					<label class="checkbox-label <?php echo in_array( esc_attr( $key ), $saved_choices, true ) ? 'active' : ''; ?>">
 						<span class="drag-handle js-drag-handle"><i class="fas fa-grip-vertical"></i></span>
-						<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( esc_attr( $key ), $saved_choices, true ), true ); ?> class="sortable-pill-checkbox"/>						
-							<i class="far fa-check-square"></i>						
-							<i class="far fa-square"></i>					
+						<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( esc_attr( $key ), $saved_choices, true ), true ); ?> class="sortable-pill-checkbox"/>
+							<i class="far fa-check-square"></i>
+							<i class="far fa-square"></i>
 						<span class="sortable-pill-title"><?php echo esc_html( $value ); ?></span>
 					</label>
 				<?php	} ?>

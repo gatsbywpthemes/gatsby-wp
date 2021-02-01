@@ -36,7 +36,7 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 			// Make sure things get reset on switch theme.
 			add_action( 'switch_theme', array( $this, 'clean_setup' ) );
 
-			// $this->plugin_installer('add-wpgraphql-seo');
+			// $this->plugin_installer( 'tgm-example-plugin' );
 		}
 
 		/**
@@ -152,13 +152,11 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				'current_page' => esc_url( $this->get_setup_page_url() ),
 				'all_plugins'  => $all_plugins,
 				'classes'      => array(
-					'start'    => 'headlesswp-larger headlesswp-center js-headlesswp-start-feedback',
 					'progress' => 'headlesswp-install-container',
 					'fail'     => 'headlesswp-install-container headlesswp-install-container-fail',
 					'success'  => 'headlesswp-install-container-success headlesswp-install-container',
 				),
 				'strings'      => array(
-					'start'        => esc_html__( 'Downloading, installing and activating plugins. Please be patient.', 'headlesswp' ),
 					'plugins_fail' => esc_html__( 'Something went wrong during the installation process. Not all plugins are properly installed.', 'headlesswp' ),
 					'finished'     => esc_html__( 'Finished.', 'headlesswp' ),
 					'success'      => esc_html__( 'Plugin successfully installed.', 'headlesswp' ),
@@ -170,20 +168,19 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 		}
 
 		public function setup_page() {
-
 			$complete = $this->is_setup_complete(); ?>
 
 			<div class="wrap headlesswp-wrap">
 				<h1>
-					<?php echo esc_html( get_admin_page_title() ); ?>
+						<?php echo esc_html( get_admin_page_title() ); ?>
 				</h1>
-				<?php
+					<?php
 					$img_atts = array(
 						'alt' => esc_attr__( 'Loading...Please wait', 'headlesswp' ),
 						'src' => esc_url( get_template_directory_uri() ) . '/images/preloader.gif',
 					);
 					?>
-				<?php if ( ! $complete['all_required_plugins_installed'] ) { ?>
+					<?php if ( ! $complete['all_required_plugins_installed'] ) { ?>
 				<section>
 					<h2>Required plugins</h2>
 					<p>Let's send your content to Gatsby. You will need two WordPress plugins : WP Gatsby and WPGraphQL. Your Gatsby website will not build, if any of these two is not installed and activated. No further configuration of these two plugins is required - you just need to have them installed and activated.</p>
@@ -197,14 +194,18 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 						</div>
 						<div class="headlesswp-feedback"></div>
 					</div>
-				
-					
 				</section>
+
 				<?php } else { ?>
 					<p class="headlesswp-box headlesswp-setup__success"><?php printf( __( '<b>All required plugins are installed and activated.</b> <br/>Enjoy working with %s!<br/> <em>Thanks.</em>', 'headlesswp' ), $this->theme_name ); ?></p>
-					<?php } ?>
+					<p>
+						<?php
+						printf( __( 'Start adding your content or <a href="%s">customize your Gatsby website here.</a>', 'headlesswp' ), esc_url( admin_url( 'customize.php' ) ) );
+						?>
+					</p>
+				<?php } ?>
 
-				<?php if ( ! $complete['all_plugins_installed'] ) { ?>
+					<?php if ( ! $complete['all_plugins_installed'] ) { ?>
 					<section>
 					<h2>Recommended plugins</h2>
 					<p>To take full advantage of our Gatsby themes, we recommend a few additional WordPress Plugins. They are not required and your Gatsby will build without any of them. We recommend:</p>
@@ -241,16 +242,13 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				<footer class="headlesswp-box headlesswp-setup__footer">
 					<p><?php esc_html_e( 'The complete list of the required(*) and recommended plugins:', 'headlesswp' ); ?></p>
 					<ul>
-						<?php foreach ( $this->all_plugins as $key => $plugin ) { ?>
+							<?php foreach ( $this->all_plugins as $key => $plugin ) { ?>
 							<li><strong><?php echo esc_html( $plugin['name'] ); ?>:</strong>
 								<?php
 								if ( 'repo' !== $plugin['source'] ) {
-									echo '<a href="' . esc_url( $plugin['source'] ) . '">' . sprintf( esc_html__( '.zip file', 'headlesswp' ) ) . '</a>';
+									echo '<a href="' . esc_url( str_replace( get_template_directory(), get_template_directory_uri(), $plugin['source'] ) ) . '">' . sprintf( esc_html__( '.zip file', 'headlesswp' ) ) . '</a>';
 								} else {
 									esc_html_e( ' available in the WordPress repo', 'headlesswp' );
-								}
-								if ( isset( $plugin['github_repo'] ) ) {
-									echo ' | <a href="' . esc_url( $plugin['github_repo'] ) . '">' . sprintf( esc_html__( 'GitHub Repository', 'headlesswp' ) ) . '</a>';
 								}
 								?>
 						</li>
@@ -258,7 +256,7 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 					</ul>	
 				</footer>
 			</div>
-			<?php
+						<?php
 		}
 
 		public function required_plugins_notice() {
@@ -303,28 +301,28 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 			}
 
 		}
-		/**
-		 * Add dismissable admin notices.
-		 *
-		 * Appends a link to the admin nag messages. If clicked, the admin notice disappears and no longer is visible to users.
-		 * hooked to admin_head
-		 */
+				/**
+				 * Add dismissable admin notices.
+				 *
+				 * Appends a link to the admin nag messages. If clicked, the admin notice disappears and no longer is visible to users.
+				 * hooked to admin_head
+				 */
 		public function dismiss() {
 			if ( isset( $_GET['headlesswp-setup-dismiss'] ) ) {
 				update_user_meta( get_current_user_id(), $this->dismiss_notice_meta_field_slug, 1 );
 			}
 		}
 
-		/**
-		 * Delete dismissable nag option for all users when theme is switched.
-		 */
+				/**
+				 * Delete dismissable nag option for all users when theme is switched.
+				 */
 		private function update_dismiss() {
 			delete_metadata( 'user', null, $this->dismiss_notice_meta_field_slug, null, true );
 		}
 
-		/**
-		 * Display settings errors and remove those which have been displayed to avoid duplicate messages showing
-		 */
+				/**
+				 * Display settings errors and remove those which have been displayed to avoid duplicate messages showing
+				 */
 		protected function display_settings_errors() {
 
 			global $wp_settings_errors;
@@ -346,30 +344,35 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 		}
 
 		private function install_plugin( $plugin ) {
-			$api = plugins_api(
-				'plugin_information',
-				array(
-					'slug'   => $plugin,
-					'fields' => array(
-						'short_description' => false,
-						'requires'          => false,
-						'sections'          => false,
-						'rating'            => false,
-						'ratings'           => false,
-						'downloaded'        => false,
-						'last_updated'      => false,
-						'added'             => false,
-						'tags'              => false,
-						'compatibility'     => false,
-						'homepage'          => false,
-						'donate_link'       => false,
-					),
-				)
-			);
+			if ( $this->all_plugins[ $plugin ]['source'] === 'repo' ) {
+				$api    = plugins_api(
+					'plugin_information',
+					array(
+						'slug'   => $plugin,
+						'fields' => array(
+							'short_description' => false,
+							'requires'          => false,
+							'sections'          => false,
+							'rating'            => false,
+							'ratings'           => false,
+							'downloaded'        => false,
+							'last_updated'      => false,
+							'added'             => false,
+							'tags'              => false,
+							'compatibility'     => false,
+							'homepage'          => false,
+							'donate_link'       => false,
+						),
+					)
+				);
+				$source = $api->download_link;
+			} else {
+				$source = $this->all_plugins[ $plugin ]['source'];
+			}
 
 			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
-			$error    = $upgrader->install( $api->download_link );
+			$error    = $upgrader->install( $source );
 			/*
 			* Check for errors...
 			* $upgrader->install() returns NULL on success,
@@ -468,10 +471,10 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 			);
 		}
 
-		/**
-		 * Flushes the plugins cache on theme switch to prevent stale entries
-		 * from remaining in the plugin table.
-		 */
+				/**
+				 * Flushes the plugins cache on theme switch to prevent stale entries
+				 * from remaining in the plugin table.
+				 */
 		private function flush_plugins_cache( $clear_update_cache = true ) {
 			wp_clean_plugins_cache( $clear_update_cache );
 		}
