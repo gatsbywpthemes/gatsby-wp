@@ -1,4 +1,4 @@
-js-headlesswp--hidden {
+.js-headlesswp--hidden {
   visibility: hidden;
   opacity: 0;
   transition: 0.5s;
@@ -74,16 +74,10 @@ js-headlesswp--hidden {
   cursor: pointer;
   transition: 0.5s;
 }
-.headlesswp-setup__link,
-.headlesswp-setup__link:hover {
-  color: #fff;
-}
-.headlesswp-setup__link:hover {
-  background-image: linear-gradient(
-    -60deg,
-    var(--theme-ui-colors-primary, rgb(137, 25, 248)),
-    var(--theme-ui-colors-pink, rgb(137, 25, 248))
-  );
+
+button:disabled {
+  opacity: 0.6;
+  cursor: auto;
 }
 
 .headlesswp-setup__link--deactivated {
@@ -106,7 +100,6 @@ js-headlesswp--hidden {
   left: 0;
   right: 0;
   top: 0;
-  bottom: 0;
   margin: auto;
 }
 
@@ -126,13 +119,15 @@ js-headlesswp--hidden {
 }
 
 .headlesswp-install-container {
-  padding: 12px;
-  margin-bottom: 24px;
-  background: #fefefe;
+  padding: 4px;
 }
 
-.headlesswp-install-container--fail {
+.headlesswp-install-container-fail {
   background: #f2c7c6;
+}
+
+.headlesswp-install-container-success {
+  background: #b2eee8;
 }
 
 .headlesswp-install-container h4 {

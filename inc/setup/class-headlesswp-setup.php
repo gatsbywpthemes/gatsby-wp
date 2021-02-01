@@ -154,8 +154,8 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				'classes'      => array(
 					'start'    => 'headlesswp-larger headlesswp-center js-headlesswp-start-feedback',
 					'progress' => 'headlesswp-install-container',
-					'fail'     => 'headlesswp-install-container headlesswp-install-container--fail',
-					'success'  => 'headlesswp-box headlesswp-setup__success',
+					'fail'     => 'headlesswp-install-container headlesswp-install-container-fail',
+					'success'  => 'headlesswp-install-container-success headlesswp-install-container',
 				),
 				'strings'      => array(
 					'start'         => esc_html__( 'Downloading, installing and activating plugins. Please be patient.', 'headlesswp' ),
@@ -187,13 +187,18 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				<section>
 					<h2>Required plugins</h2>
 					<p>Let's send your content to Gatsby. You will need two WordPress plugins : WP Gatsby and WPGraphQL. Your Gatsby website will not build, if any of these two is not installed and activated. No further configuration of these two plugins is required - you just need to have them installed and activated.</p>
-					<button type="button" class="js-headlesswp-setup__link headlesswp-setup__link" id="headlesswp-install-required" >
-						<span class="headlesswp-transitioned">
+					<div class="js-install" style="position: relative; text-align: center">
+						<button type="button" class="js-headlesswp-setup__link headlesswp-setup__link" id="headlesswp-install-required" >
 							<?php esc_html_e( 'Let\'s Install and Activate Required Plugins.', 'headlesswp' ); ?>
-						</span>
-						<img class="headlesswp-setup__preloader js-headlesswp--hidden" alt="<?php echo esc_attr( $img_atts['alt'] ); ?>" src="<?php echo esc_url( $img_atts['src'] ); ?>" width="64" height="64">
-					</button>
-					<div class="headlesswp-feedback"></div>
+						</button>
+						<div class="progress-feedback js-progress-feedback js-headlesswp--hidden">
+							<span>Installing required plugins. This can take a while...</span>
+							<img class="headlesswp-setup__preloader" alt="<?php echo esc_attr( $img_atts['alt'] ); ?>" src="<?php echo esc_url( $img_atts['src'] ); ?>" width="64" height="64">
+						</div>
+						<div class="headlesswp-feedback"></div>
+					</div>
+				
+					
 				</section>
 				<?php } else { ?>
 					<p class="headlesswp-box headlesswp-setup__success"><?php printf( __( '<b>All required plugins are installed and activated.</b> <br/>Enjoy working with %s!<br/> <em>Thanks.</em>', 'headlesswp' ), $this->theme_name ); ?></p>
@@ -216,13 +221,16 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 							<?php } ?>
 						<?php } ?>
 					</ul>
-					<button type="button" class="js-headlesswp-setup__link headlesswp-setup__link" id="headlesswp-install-all" >
-						<span class="headlesswp-transitioned">
+					<div class="js-install" style="position: relative; text-align: center">
+						<button type="button" class="js-headlesswp-setup__link headlesswp-setup__link" id="headlesswp-install-all" >
 							<?php esc_html_e( 'Install and Activate All Required & Recommended Plugins.', 'headlesswp' ); ?>
-						</span>
-						<img class="headlesswp-setup__preloader js-headlesswp--hidden" alt="<?php echo esc_attr( $img_atts['alt'] ); ?>" src="<?php echo esc_url( $img_atts['src'] ); ?>" width="64" height="64">
-					</button>
-					<div class="headlesswp-feedback"></div>
+						</button>
+						<div class="progress-feedback js-progress-feedback js-headlesswp--hidden">
+							<span>Installing required & recommended plugins. This can take a while...</span>
+							<img class="headlesswp-setup__preloader" alt="<?php echo esc_attr( $img_atts['alt'] ); ?>" src="<?php echo esc_url( $img_atts['src'] ); ?>" width="64" height="64">
+						</div>
+						<div class="headlesswp-feedback"></div>
+					</div>
 				</section>		
 				<?php } else { ?>
 					<p class="headlesswp-box headlesswp-setup__success"><?php echo esc_html__( 'Yay!! All recommended plugins are installed and activated.', 'headlesswp' ); ?></p>

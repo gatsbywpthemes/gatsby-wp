@@ -3,7 +3,16 @@
   height: 16px;
 }
 
+#adminmenu #toplevel_page_headlesswp-setup-page a.menu-top {
+  display: flex;
+  align-items: center;
+}
+
 #adminmenu #toplevel_page_headlesswp-setup-page.current a.menu-top {
   background: white;
   color: black;
+}
+
+#adminmenu #toplevel_page_headlesswp-setup-page .wp-menu-name {
+  padding-left: 0;
 }

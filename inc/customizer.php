@@ -18,7 +18,7 @@ add_action(
 	function ( $wp_customize ) use ( $headlesswp_customizer_config ) {
 		$wp_customize->get_setting( 'blogname' )->transport        = 'postMessage';
 		$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
-
+		
 		if ( isset( $wp_customize->selective_refresh ) ) {
 			$wp_customize->selective_refresh->add_partial(
 				'blogname',
@@ -38,7 +38,12 @@ add_action(
 					},
 				)
 			);
-
+			$wp_customize->selective_refresh->add_partial(
+				'site_icon',
+				array(
+					'selector'        => '.site-icon',
+				)
+			);
 		}
 
 		$wp_customize->remove_section( 'custom_css' );
@@ -49,11 +54,13 @@ add_action(
 			'headlesswp-site-settings',
 			array(
 				'title'       => __( 'Settings for your Gatsby website', 'headlesswp' ),
-				'description' => __( 'Description', 'headlesswp' ), // Include html tags such as <p>.
-				'priority'    => 160, // Mixed with top-level-section hierarchy.
+				'description' => __( 'Description', 'headlesswp' ), 
+				'priority'    => 1,
 			)
 		);
-
+		
+		// move Site Identity tab to our custom panel
+		$wp_customize->get_section('title_tagline')->panel = 'headlesswp-site-settings';
 		$wp_customize->add_section(
 			'headlesswp-features',
 			array(
@@ -78,9 +85,15 @@ add_action(
 					array(
 						'label'    => __( 'Logo', 'headlesswp' ),
 						'priority' => 10,
-						'section'  => 'headlesswp-features',
+						'section'  => 'title_tagline',
 						'settings' => 'headlesswp-logo',
 					)
+				)
+			);
+			$wp_customize->selective_refresh->add_partial(
+				'headlesswp-logo',
+				array(
+					'selector'        => '.logo',
 				)
 			);
 		}
@@ -101,9 +114,15 @@ add_action(
 					array(
 						'label'    => __( 'Dark Mode Logo', 'headlesswp' ),
 						'priority' => 11,
-						'section'  => 'headlesswp-features',
+						'section'  => 'title_tagline',
 						'settings' => 'headlesswp-dark_mode_logo',
 					)
+				)
+			);
+			$wp_customize->selective_refresh->add_partial(
+				'headlesswp-dark_mode_logo',
+				array(
+					'selector'        => '.dark-mode-logo',
 				)
 			);
 		}
@@ -125,6 +144,12 @@ add_action(
 					'section'     => 'headlesswp-features', // Required, core or custom.
 					'label'       => __( 'Add WordPress comments', 'headlesswp' ),
 					'description' => __( 'Our Gatsby theme supports native WordPress comments.', 'headlesswp' ),
+				)
+			);
+			$wp_customize->selective_refresh->add_partial(
+				'headlesswp-add_wp_comments',
+				array(
+					'selector'        => '[data-to="headlesswp-add_wp_comments"]',
 				)
 			);
 		}
@@ -149,6 +174,12 @@ add_action(
 					'description' => __( 'Check here to add native search functionality.', 'headlesswp' ),
 				)
 			);
+			$wp_customize->selective_refresh->add_partial(
+				'headlesswp-add_wp_search',
+				array(
+					'selector'        => '[data-to="headlesswp-add_wp_search"]',
+				)
+			);
 		}
 
 		if ( $headlesswp_customizer_config['social_follow']['supports'] ) {
@@ -160,6 +191,7 @@ add_action(
 					'panel'       => 'headlesswp-site-settings',
 				)
 			);
+			
 			require_once get_template_directory() . '/inc/customizer-follow-links.php';
 		}
 
@@ -167,8 +199,7 @@ add_action(
 			$wp_customize->add_section(
 				'headlesswp-widgets',
 				array(
-					'title'       => __( 'Widgets on your Gatsby website', 'headlesswp' ),
-					'description' => __( 'Currently our Gatsby themes ...', 'headlesswp' ),
+					'title'       => __( 'Gatsby widgets', 'headlesswp' ),
 					'panel'       => 'headlesswp-site-settings',
 				)
 			);
@@ -202,6 +233,13 @@ add_action(
 									'Newsletter'   => __( 'Newsletter', 'headlesswp' ),
 								),
 							)
+						)
+					);
+					$wp_customize->selective_refresh->add_partial(
+						"headlesswp-$key",
+						array(
+							'selector' => "[data-to='headlesswp-$key']",
+							'fallback_refresh' => false,
 						)
 					);
 				}

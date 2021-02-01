@@ -19,8 +19,14 @@ const fetchSettings = (slug, nonce) => ({
     nonce,
   }),
 })
-const loop = async (plugins, notification) => {
+const loop = async (plugins, trigger) => {
   let withErrors = false
+  const notification = trigger.parentNode.querySelector(".headlesswp-feedback")
+  const progressFeedback = trigger.parentNode.querySelector(
+    ".js-progress-feedback "
+  )
+  progressFeedback.classList.remove("js-headlesswp--hidden")
+  trigger.classList.add("js-headlesswp--hidden")
   for (const { slug, name, nonce } of plugins) {
     const url = slug === "contact-form-7" ? ajaxurl + "" : ajaxurl
     console.log(notification)
@@ -39,7 +45,7 @@ const loop = async (plugins, notification) => {
       notification.insertAdjacentHTML(
         "beforeend",
         "<div class='" +
-          headlesswp_setup_scriptparams.classes.progress +
+          headlesswp_setup_scriptparams.classes.success +
           "'><strong>" +
           name +
           ":</strong> - " +
@@ -51,7 +57,7 @@ const loop = async (plugins, notification) => {
       notification.insertAdjacentHTML(
         "beforeend",
         "<div class='" +
-          headlesswp_setup_scriptparams.classes.progress +
+          headlesswp_setup_scriptparams.classes.fail +
           "'><strong>" +
           name +
           ":</strong> - " +
@@ -61,21 +67,18 @@ const loop = async (plugins, notification) => {
       withErrors = true
     }
   }
-  console.log("finished1")
+  progressFeedback.classList.add("js-headlesswp--hidden")
   if (!withErrors) {
-    window.location.replace(headlesswp_setup_scriptparams.current_page)
+    setTimeout(
+      () => window.location.replace(headlesswp_setup_scriptparams.current_page),
+      1000
+    )
   }
 }
 triggerAll?.addEventListener("click", () => {
-  console.log("clicked")
-  loop(plugins, triggerAll.parentNode.querySelector(".headlesswp-feedback"))
+  loop(plugins, triggerAll)
   console.log("finished")
 })
 triggerRequired?.addEventListener("click", () => {
-  console.log("clicked")
-  loop(
-    requiredPlugins,
-    triggerRequired.parentNode.querySelector(".headlesswp-feedback")
-  )
-  console.log("finished")
+  loop(requiredPlugins, triggerRequired)
 })

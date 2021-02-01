@@ -7,6 +7,176 @@
  * @package headlesswp
  */
 
+$headlesswp_all_plugins = apply_filters( 'headlesswp_all_plugins', array(
+	'wp-gatsby' => array(
+		'slug'   => 'wp-gatsby',
+		'name'   => 'WP Gatsby',
+		'source' => 'repo',
+		'file_path' => 'wp-gatsby/wp-gatsby.php',
+		'required' => true,
+	),
+	'wp-graphql' => array(
+		'slug'   => 'wp-graphql',
+		'name'   => 'WPGraphQL',
+		'source' => 'repo',
+		'file_path' => 'wp-graphql/wp-graphql.php',
+		'required' => true,
+	),
+	
+	'contact-form-7' => array(
+		'slug'   => 'contact-form-7',
+		'name'   => 'Contact Form 7',
+		'source' => 'repo',
+		'file_path' => 'contact-form-7/wp-contact-form-7.php',
+		'required' => false,
+		'description' => __('If you want to set up a contact form on your website, make sure to use Contact Form 7. For the moment, Contact Form 7 is the only WordPress plugin compatible with our Gatsby themes.', 'headlesswp')
+	),
+	'wordpress-seo' => array(
+		'slug'   => 'wordpress-seo',
+		'name'   => 'Yoast SEO',
+		'source' => 'repo',
+		'file_path' => 'wordpress-seo/wp-seo.php',
+		'required' => false,
+
+	),
+		'add-wpgraphql-seo' => array(
+		'slug'   => 'add-wpgraphql-seo',
+		'name'   => 'Add WPGraphQL SEO',
+		'source' => 'repo',
+		'file_path' => 'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
+		'required' => false,
+		'description' => 'fjakfo jfaiofjoq'
+	),
+	'code-syntax-block' => array(
+		'slug'   => 'code-syntax-block',
+		'name'   => 'Code Syntax Block',
+		'source' => 'repo',
+		'file_path' => 'code-syntax-block/index.php',
+		'required' => false,
+	),
+));
+
+$headlesswp_customizer_config = array(
+	'logo'            => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_logo', true ),
+		'default'  => '',
+	),
+	'dark_mode_logo'  => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_dark_mode_logo', true ),
+		'default'  => '',
+	),
+	'add_wp_comments' => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_add_wp_comments', true ),
+		'default'  => 'true',
+	),
+	'add_wp_search'   => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_add_wp_search', true ),
+		'default'  => 'true',
+	),
+	'widgets'         => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_widgets', true ),
+		'areas'    =>
+			apply_filters(
+				'headlesswp_customizer_widget_areas',
+				array(
+					'slide_menu_widgets' => array(
+						'supports'    => apply_filters( 'headlesswp_customizer_supports_slide_menu_widgets', true ),
+						'label'       => __( 'Navigation Sidebar Widgets', 'headlesswp' ),
+						'description' => esc_html__( 'These widgets will be displayed in the off-canvas navigation sidebar.', 'headlesswp' ),
+						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
+					),
+					'sidebar_widgets'    => array(
+						'supports'    => apply_filters( 'headlesswp_customizer_supports_sidebar_widgets', true ),
+						'label'       => __( 'Sidebar Widgets', 'headlesswp' ),
+						'description' => esc_html__( 'These widgets will be displayed in the Sidebar Widgets area.', 'headlesswp' ),
+						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
+					),
+				)
+		),
+	),
+	'social_follow'   => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_social_follow', true ),
+	),
+	'colors'          => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_colors', true ),
+		'colors'   =>
+			apply_filters(
+				'headlesswp_customizer_colors',
+				array(
+					'text' => array(
+						'label'       => __( 'Text color', 'headlesswp' ),
+						'description' => esc_html__( '....', 'headlesswp' ),
+						'default'     => '#303030',
+					),
+					'bg'   => array(
+						'label'       => __( 'Background Color', 'headlesswp' ),
+						'description' => esc_html__( '....', 'headlesswp' ),
+						'default'     => '#fff',
+					),
+				)
+			),
+	),
+	'modes'           => array(
+		'supports' => apply_filters( 'headlesswp_customizer_supports_modes', true ),
+		'colors'   =>
+			apply_filters(
+				'headlesswp_customizer_modes',
+				array(
+					'dark' => array(
+						'text' => array(
+							'label'   => __( 'Dark Mode Text Color', 'headlesswp' ),
+							'default' => '#fff',
+						),
+						'bg'   => array(
+							'label'   => __( 'Dark Mode  Background Color', 'headlesswp' ),
+							'default' => '#303030',
+						),
+					),
+				)
+			),
+	),
+);
+// return false if not supported
+$headlesswp_page_templates = apply_filters( 
+	'headlesswp_page_templates', 
+	array(
+		array(
+			'post_type' => 'post',
+			'choices' => array(
+				array( 
+					'value' => 'full',
+					'label' => __('Full width', 'headlesswp')
+				),
+				array( 
+					'value' =>'right',
+					'label' => __('Right sidebar', 'headlesswp')
+				),
+				array( 
+					'value' =>'left',
+					'label' => __('Left sidebar', 'headlesswp')
+				),
+			)
+		),
+		array(
+			'post_type' => 'page',
+			'choices' => array(
+				array( 
+					'value' => 'full',
+					'label' => __('Full width', 'headlesswp')
+				),
+				array( 
+					'value' =>'right',
+					'label' => __('Right sidebar', 'headlesswp')
+				),
+				array( 
+					'value' =>'left',
+					'label' => __('Left sidebar', 'headlesswp')
+				),
+			)
+		),
+	)
+);
+
 if ( is_child_theme() ) {
 	$temp_obj  = wp_get_theme();
 	$theme_obj = wp_get_theme( $temp_obj->get( 'Template' ) );
@@ -145,86 +315,7 @@ require get_template_directory() . '/inc/template-functions.php';
  * Customizer additions.
  */
 
-$headlesswp_customizer_config = array(
-	'logo'            => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_logo', true ),
-		'default'  => '',
-	),
-	'dark_mode_logo'  => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_dark_mode_logo', true ),
-		'default'  => '',
-	),
-	'add_wp_comments' => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_add_wp_comments', true ),
-		'default'  => 'true',
-	),
-	'add_wp_search'   => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_add_wp_search', true ),
-		'default'  => 'true',
-	),
-	'widgets'         => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_widgets', true ),
-		'areas'    =>
-			apply_filters(
-				'headlesswp_customizer_widget_areas',
-				array(
-					'slide_menu_widgets' => array(
-						'supports'    => apply_filters( 'headlesswp_customizer_supports_slide_menu_widgets', true ),
-						'label'       => __( 'Navigation Sidebar Widgets', 'headlesswp' ),
-						'description' => esc_html__( 'These widgets will be displayed in the off-canvas navigation sidebar.', 'headlesswp' ),
-						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
-					),
-					'sidebar_widgets'    => array(
-						'supports'    => apply_filters( 'headlesswp_customizer_supports_sidebar_widgets', true ),
-						'label'       => __( 'Sidebar Widgets', 'headlesswp' ),
-						'description' => esc_html__( 'These widgets will be displayed in the Sidebar Widgets area.', 'headlesswp' ),
-						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
-					),
-				)
-			),
-	),
-	'social_follow'   => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_social_follow', true ),
-	),
-	'colors'          => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_colors', true ),
-		'colors'   =>
-			apply_filters(
-				'headlesswp_customizer_colors',
-				array(
-					'text' => array(
-						'label'       => __( 'Text color', 'headlesswp' ),
-						'description' => esc_html__( '....', 'headlesswp' ),
-						'default'     => '#303030',
-					),
-					'bg'   => array(
-						'label'       => __( 'Background Color', 'headlesswp' ),
-						'description' => esc_html__( '....', 'headlesswp' ),
-						'default'     => '#fff',
-					),
-				)
-			),
-	),
-	'modes'           => array(
-		'supports' => apply_filters( 'headlesswp_customizer_supports_modes', true ),
-		'colors'   =>
-			apply_filters(
-				'headlesswp_customizer_modes',
-				array(
-					'dark' => array(
-						'text' => array(
-							'label'   => __( 'Dark Mode Text Color', 'headlesswp' ),
-							'default' => '#fff',
-						),
-						'bg'   => array(
-							'label'   => __( 'Dark Mode  Background Color', 'headlesswp' ),
-							'default' => '#303030',
-						),
-					),
-				)
-			),
-	),
-);
+
 require get_template_directory() . '/inc/customizer.php';
 
 require_once get_template_directory() . '/inc/graphql/registerfields.php';
@@ -253,63 +344,20 @@ add_filter(
 
 require_once get_template_directory() . '/inc/page-metabox.php';
 
-function headlesswp_enqueue_assets() {
+add_action( 'enqueue_block_editor_assets', function () use ($headlesswp_page_templates) {
 	wp_enqueue_script(
 		'headlesswp-gutenberg-sidebar',
 		get_template_directory_uri() . '/build/index.js',
 		array( 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data' )
 	);
-}
-add_action( 'enqueue_block_editor_assets', 'headlesswp_enqueue_assets' );
+	wp_localize_script(
+		'headlesswp-gutenberg-sidebar',
+		'headlesswp_page_templates',
+		$headlesswp_page_templates
+	);
+} );
 
-$headlesswp_all_plugins = apply_filters( 'headlesswp_all_plugins', array(
-			'wp-gatsby' => array(
-				'slug'   => 'wp-gatsby',
-				'name'   => 'WP Gatsby',
-				'source' => 'repo',
-				'file_path' => 'wp-gatsby/wp-gatsby.php',
-				'required' => true,
-			),
-			'wp-graphql' => array(
-				'slug'   => 'wp-graphql',
-				'name'   => 'WPGraphQL',
-				'source' => 'repo',
-				'file_path' => 'wp-graphql/wp-graphql.php',
-				'required' => true,
-			),
-			
-			'contact-form-7' => array(
-				'slug'   => 'contact-form-7',
-				'name'   => 'Contact Form 7',
-				'source' => 'repo',
-				'file_path' => 'contact-form-7/wp-contact-form-7.php',
-				'required' => false,
-				'description' => __('If you want to set up a contact form on your website, make sure to use Contact Form 7. For the moment, Contact Form 7 is the only WordPress plugin compatible with our Gatsby themes.', 'headlesswp')
-			),
-			'wordpress-seo' => array(
-				'slug'   => 'wordpress-seo',
-				'name'   => 'Yoast SEO',
-				'source' => 'repo',
-				'file_path' => 'wordpress-seo/wp-seo.php',
-				'required' => false,
 
-			),
-				'add-wpgraphql-seo' => array(
-				'slug'   => 'add-wpgraphql-seo',
-				'name'   => 'Add WPGraphQL SEO',
-				'source' => 'repo',
-				'file_path' => 'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
-				'required' => false,
-				'description' => 'fjakfo jfaiofjoq'
-			),
-			'code-syntax-block' => array(
-				'slug'   => 'code-syntax-block',
-				'name'   => 'Code Syntax Block',
-				'source' => 'repo',
-				'file_path' => 'code-syntax-block/index.php',
-				'required' => false,
-			),
-		));
 
 
 if ( is_admin() ) {

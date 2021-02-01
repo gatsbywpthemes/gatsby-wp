@@ -3,7 +3,7 @@
 
 add_action(
 	'graphql_register_types',
-	function() use ( $headlesswp_customizer_config ) {
+	function() use ( $headlesswp_customizer_config, $headlesswp_page_templates ) {
 
 		register_graphql_object_type(
 			'GatsbyWPThemesSocial',
@@ -206,5 +206,17 @@ add_action(
 					},
 				)
 			);
+		foreach ($headlesswp_page_templates as $page_templates) {
+			register_graphql_field(
+				$page_templates['post_type'],
+				'pageTemplate',
+				array(
+					'type'    => 'String',
+					'resolve' => function( $post ) use ($page_templates) {
+						return get_post_meta( $post->ID, '_headlesswp_page_template_metafield', true ) ? get_post_meta( $post->ID, '_headlesswp_page_template_metafield', true ) : $page_templates['choices'][0]['value'];
+					},
+				)
+			);
+		}
 	}
 );

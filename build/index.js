@@ -115,23 +115,34 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var PluginMetaFields = function PluginMetaFields(props) {
-  console.log(props);
+  var pageTemplates = window.headlesswp_page_templates.find(function (el) {
+    return el.post_type === props.postType;
+  });
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__["PanelBody"], {
-    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Fields Panel", "textdomain"),
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Gatsby Settings", "headlesswp"),
     icon: "admin-post",
     intialOpen: true
-  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__["CheckboxControl"], {
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Skip title", "textdomain"),
+  }, props.postType === "page" && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__["CheckboxControl"], {
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Skip title", "headlesswp"),
     checked: !!props.skip_title_metafield,
     onChange: function onChange(checked) {
       return props.onMetaFieldChange(checked);
+    }
+  }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("hr", null), pageTemplates && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__["SelectControl"], {
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Choose your page template", "headlesswp"),
+    value: props.page_template_metafield,
+    options: pageTemplates.choices,
+    onChange: function onChange(value) {
+      return props.onTemplateChange(value);
     }
   })));
 };
 
 PluginMetaFields = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__["withSelect"])(function (select) {
   return {
-    skip_title_metafield: select("core/editor").getEditedPostAttribute("meta")["_headlesswp_skip_title_metafield"]
+    skip_title_metafield: select("core/editor").getEditedPostAttribute("meta")["_headlesswp_skip_title_metafield"],
+    page_template_metafield: select("core/editor").getEditedPostAttribute("meta")["_headlesswp_page_template_metafield"],
+    postType: select("core/editor").getCurrentPostType()
   };
 })(PluginMetaFields);
 PluginMetaFields = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__["withDispatch"])(function (dispatch) {
@@ -141,6 +152,14 @@ PluginMetaFields = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__["withDisp
       dispatch("core/editor").editPost({
         meta: {
           _headlesswp_skip_title_metafield: value
+        }
+      });
+    },
+    onTemplateChange: function onTemplateChange(value) {
+      console.log("onTemplateChange", value);
+      dispatch("core/editor").editPost({
+        meta: {
+          _headlesswp_page_template_metafield: value
         }
       });
     }
@@ -155,17 +174,11 @@ Object(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__["registerPlugin"])("headl
     transform: "translate(-261.68 -147.28)"
   })),
   render: function render() {
-    var postType = wp.data.select("core/editor").getCurrentPostType();
-
-    if (postType !== "page") {
-      return null;
-    }
-
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__["PluginSidebarMoreMenuItem"], {
       target: "headlesswp-sidebar"
-    }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Options", "textdomain")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__["PluginSidebar"], {
+    }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Options", "headlesswp")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__["PluginSidebar"], {
       name: "headlesswp-sidebar",
-      title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Options", "textdomain")
+      title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])("Meta Options", "headlesswp")
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(PluginMetaFields, null)));
   }
 });

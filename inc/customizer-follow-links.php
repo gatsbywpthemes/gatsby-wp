@@ -56,6 +56,13 @@ $wp_customize->add_setting(
 		'sanitize_callback' => 'sanitize_text_field',
 	)
 );
+$wp_customize->selective_refresh->add_partial(
+	'headlesswp-social_follow_order',
+	array(
+		'selector' => '[data-to="headlesswp-social_follow_order"]',
+		'fallback_refresh' => false,
+	)
+);
 array_push( $settings, 'headlesswp-social_follow_order' );
 
 $labels =

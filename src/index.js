@@ -1,23 +1,40 @@
 import { registerPlugin } from "@wordpress/plugins"
 import { PluginSidebar, PluginSidebarMoreMenuItem } from "@wordpress/edit-post"
 import { __ } from "@wordpress/i18n"
-import { PanelBody, CheckboxControl } from "@wordpress/components"
+import {
+  PanelBody,
+  CheckboxControl,
+  SelectControl,
+} from "@wordpress/components"
 import { withSelect, withDispatch } from "@wordpress/data"
 
 let PluginMetaFields = (props) => {
-  console.log(props)
+  const pageTemplates = window.headlesswp_page_templates.find(
+    (el) => el.post_type === props.postType
+  )
   return (
     <>
       <PanelBody
-        title={__("Meta Fields Panel", "textdomain")}
+        title={__("Gatsby Settings", "headlesswp")}
         icon="admin-post"
         intialOpen={true}
       >
-        <CheckboxControl
-          label={__("Skip title", "textdomain")}
-          checked={!!props.skip_title_metafield}
-          onChange={(checked) => props.onMetaFieldChange(checked)}
-        />
+        {props.postType === "page" && (
+          <CheckboxControl
+            label={__("Skip title", "headlesswp")}
+            checked={!!props.skip_title_metafield}
+            onChange={(checked) => props.onMetaFieldChange(checked)}
+          />
+        )}
+        <hr />
+        {pageTemplates && (
+          <SelectControl
+            label={__("Choose your page template", "headlesswp")}
+            value={props.page_template_metafield}
+            options={pageTemplates.choices}
+            onChange={(value) => props.onTemplateChange(value)}
+          />
+        )}
       </PanelBody>
     </>
   )
@@ -28,6 +45,10 @@ PluginMetaFields = withSelect((select) => {
     skip_title_metafield: select("core/editor").getEditedPostAttribute("meta")[
       "_headlesswp_skip_title_metafield"
     ],
+    page_template_metafield: select("core/editor").getEditedPostAttribute(
+      "meta"
+    )["_headlesswp_page_template_metafield"],
+    postType: select("core/editor").getCurrentPostType(),
   }
 })(PluginMetaFields)
 
@@ -37,6 +58,12 @@ PluginMetaFields = withDispatch((dispatch) => {
       console.log("onMetaFieldChange", value)
       dispatch("core/editor").editPost({
         meta: { _headlesswp_skip_title_metafield: value },
+      })
+    },
+    onTemplateChange: (value) => {
+      console.log("onTemplateChange", value)
+      dispatch("core/editor").editPost({
+        meta: { _headlesswp_page_template_metafield: value },
       })
     },
   }
@@ -53,18 +80,14 @@ registerPlugin("headlesswp-sidebar", {
     </svg>
   ),
   render: () => {
-    const postType = wp.data.select("core/editor").getCurrentPostType()
-    if (postType !== "page") {
-      return null
-    }
     return (
       <>
         <PluginSidebarMoreMenuItem target="headlesswp-sidebar">
-          {__("Meta Options", "textdomain")}
+          {__("Meta Options", "headlesswp")}
         </PluginSidebarMoreMenuItem>
         <PluginSidebar
           name="headlesswp-sidebar"
-          title={__("Meta Options", "textdomain")}
+          title={__("Meta Options", "headlesswp")}
         >
           <PluginMetaFields />
         </PluginSidebar>
