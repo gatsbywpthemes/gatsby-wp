@@ -59,7 +59,7 @@ $wp_customize->add_setting(
 $wp_customize->selective_refresh->add_partial(
 	'headlesswp-social_follow_order',
 	array(
-		'selector' => '[data-to="headlesswp-social_follow_order"]',
+		'selector'         => '[data-to="headlesswp-social_follow_order"]',
 		'fallback_refresh' => false,
 	)
 );
@@ -81,10 +81,10 @@ $wp_customize->add_control(
 			'labels'      => $labels,
 			'keys'        => $supported_social_networks,
 			'hidden'      => 'headlesswp-social_follow_order',
-			'label'       => __( 'Follow Links' ),
+			'label'       => __( 'Follow Links', 'headlesswp' ),
 			'section'     => 'headlesswp-social_follow',
 			'settings'    => $settings,
-			'description' => __( 'Configure your social .' ),
+			'description' => __( 'Configure links to your social profiles.', 'headlesswp' ),
 			'priority'    => 80,
 		)
 	)

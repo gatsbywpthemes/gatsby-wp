@@ -7,54 +7,57 @@
  * @package headlesswp
  */
 
-$headlesswp_all_plugins = apply_filters( 'headlesswp_all_plugins', array(
-	'wp-gatsby' => array(
-		'slug'   => 'wp-gatsby',
-		'name'   => 'WP Gatsby',
-		'source' => 'repo',
-		'file_path' => 'wp-gatsby/wp-gatsby.php',
-		'required' => true,
-	),
-	'wp-graphql' => array(
-		'slug'   => 'wp-graphql',
-		'name'   => 'WPGraphQL',
-		'source' => 'repo',
-		'file_path' => 'wp-graphql/wp-graphql.php',
-		'required' => true,
-	),
-	
-	'contact-form-7' => array(
-		'slug'   => 'contact-form-7',
-		'name'   => 'Contact Form 7',
-		'source' => 'repo',
-		'file_path' => 'contact-form-7/wp-contact-form-7.php',
-		'required' => false,
-		'description' => __('If you want to set up a contact form on your website, make sure to use Contact Form 7. For the moment, Contact Form 7 is the only WordPress plugin compatible with our Gatsby themes.', 'headlesswp')
-	),
-	'wordpress-seo' => array(
-		'slug'   => 'wordpress-seo',
-		'name'   => 'Yoast SEO',
-		'source' => 'repo',
-		'file_path' => 'wordpress-seo/wp-seo.php',
-		'required' => false,
+$headlesswp_all_plugins = apply_filters(
+	'headlesswp_all_plugins',
+	array(
+		'wp-gatsby'         => array(
+			'slug'      => 'wp-gatsby',
+			'name'      => 'WP Gatsby',
+			'source'    => 'repo',
+			'file_path' => 'wp-gatsby/wp-gatsby.php',
+			'required'  => true,
+		),
+		'wp-graphql'        => array(
+			'slug'      => 'wp-graphql',
+			'name'      => 'WPGraphQL',
+			'source'    => 'repo',
+			'file_path' => 'wp-graphql/wp-graphql.php',
+			'required'  => true,
+		),
 
-	),
+		'contact-form-7'    => array(
+			'slug'        => 'contact-form-7',
+			'name'        => 'Contact Form 7',
+			'source'      => 'repo',
+			'file_path'   => 'contact-form-7/wp-contact-form-7.php',
+			'required'    => false,
+			'description' => __( 'If you want to set up a contact form on your website, make sure to use Contact Form 7. For the moment, Contact Form 7 is the only WordPress plugin compatible with our Gatsby themes.', 'headlesswp' ),
+		),
+		'wordpress-seo'     => array(
+			'slug'      => 'wordpress-seo',
+			'name'      => 'Yoast SEO',
+			'source'    => 'repo',
+			'file_path' => 'wordpress-seo/wp-seo.php',
+			'required'  => false,
+
+		),
 		'add-wpgraphql-seo' => array(
-		'slug'   => 'add-wpgraphql-seo',
-		'name'   => 'Add WPGraphQL SEO',
-		'source' => 'repo',
-		'file_path' => 'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
-		'required' => false,
-		'description' => 'fjakfo jfaiofjoq'
-	),
-	'code-syntax-block' => array(
-		'slug'   => 'code-syntax-block',
-		'name'   => 'Code Syntax Block',
-		'source' => 'repo',
-		'file_path' => 'code-syntax-block/index.php',
-		'required' => false,
-	),
-));
+			'slug'        => 'add-wpgraphql-seo',
+			'name'        => 'Add WPGraphQL SEO',
+			'source'      => 'repo',
+			'file_path'   => 'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
+			'required'    => false,
+			'description' => 'fjakfo jfaiofjoq',
+		),
+		'code-syntax-block' => array(
+			'slug'      => 'code-syntax-block',
+			'name'      => 'Code Syntax Block',
+			'source'    => 'repo',
+			'file_path' => 'code-syntax-block/index.php',
+			'required'  => false,
+		),
+	)
+);
 
 $headlesswp_customizer_config = array(
 	'logo'            => array(
@@ -92,7 +95,7 @@ $headlesswp_customizer_config = array(
 						'default'     => 'SocialFollow,RecentPosts,Categories,Tags',
 					),
 				)
-		),
+			),
 	),
 	'social_follow'   => array(
 		'supports' => apply_filters( 'headlesswp_customizer_supports_social_follow', true ),
@@ -137,42 +140,42 @@ $headlesswp_customizer_config = array(
 	),
 );
 // return false if not supported
-$headlesswp_page_templates = apply_filters( 
-	'headlesswp_page_templates', 
+$headlesswp_page_templates = apply_filters(
+	'headlesswp_page_templates',
 	array(
 		array(
 			'post_type' => 'post',
-			'choices' => array(
-				array( 
+			'choices'   => array(
+				array(
 					'value' => 'full',
-					'label' => __('Full width', 'headlesswp')
+					'label' => __( 'Full width', 'headlesswp' ),
 				),
-				array( 
-					'value' =>'right',
-					'label' => __('Right sidebar', 'headlesswp')
+				array(
+					'value' => 'right',
+					'label' => __( 'Right sidebar', 'headlesswp' ),
 				),
-				array( 
-					'value' =>'left',
-					'label' => __('Left sidebar', 'headlesswp')
+				array(
+					'value' => 'left',
+					'label' => __( 'Left sidebar', 'headlesswp' ),
 				),
-			)
+			),
 		),
 		array(
 			'post_type' => 'page',
-			'choices' => array(
-				array( 
+			'choices'   => array(
+				array(
 					'value' => 'full',
-					'label' => __('Full width', 'headlesswp')
+					'label' => __( 'Full width', 'headlesswp' ),
 				),
-				array( 
-					'value' =>'right',
-					'label' => __('Right sidebar', 'headlesswp')
+				array(
+					'value' => 'right',
+					'label' => __( 'Right sidebar', 'headlesswp' ),
 				),
-				array( 
-					'value' =>'left',
-					'label' => __('Left sidebar', 'headlesswp')
+				array(
+					'value' => 'left',
+					'label' => __( 'Left sidebar', 'headlesswp' ),
 				),
-			)
+			),
 		),
 	)
 );
@@ -293,7 +296,7 @@ add_action(
 		wp_enqueue_style( 'b5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' );
 		wp_enqueue_style( 'headlesswp-style', get_stylesheet_uri(), array( 'b5' ), _S_VERSION );
 		wp_enqueue_script( 'headlesswp-navigation', get_template_directory_uri() . '/build/navigation.js', array(), _S_VERSION, true );
-		wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/569911808f.js' );
+		wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/569911808f.js', array(), null );
 		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 			wp_enqueue_script( 'comment-reply' );
 		}
@@ -344,18 +347,21 @@ add_filter(
 
 require_once get_template_directory() . '/inc/page-metabox.php';
 
-add_action( 'enqueue_block_editor_assets', function () use ($headlesswp_page_templates) {
-	wp_enqueue_script(
-		'headlesswp-gutenberg-sidebar',
-		get_template_directory_uri() . '/build/index.js',
-		array( 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data' )
-	);
-	wp_localize_script(
-		'headlesswp-gutenberg-sidebar',
-		'headlesswp_page_templates',
-		$headlesswp_page_templates
-	);
-} );
+add_action(
+	'enqueue_block_editor_assets',
+	function () use ( $headlesswp_page_templates ) {
+		wp_enqueue_script(
+			'headlesswp-gutenberg-sidebar',
+			get_template_directory_uri() . '/build/index.js',
+			array( 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data' )
+		);
+		wp_localize_script(
+			'headlesswp-gutenberg-sidebar',
+			'headlesswp_page_templates',
+			$headlesswp_page_templates
+		);
+	}
+);
 
 
 

@@ -2,16 +2,16 @@
 /**
  * WP Bootstrap Navwalker
  *
- * @package WP-Bootstrap-Navwalker
+ * @package headlesswp
  *
  * @wordpress-plugin
  * Plugin Name: WP Bootstrap Navwalker
- * Plugin URI:  https://github.com/wp-bootstrap/wp-bootstrap-navwalker
+ * Plugin URI:  https://github.com/wp-bootstrap/headlesswp
  * Description: A custom WordPress nav walker class to implement the Bootstrap 4 navigation style in a custom theme using the WordPress built in menu manager.
  * Author: Edward McIntyre - @twittem, WP Bootstrap, William Patton - @pattonwebz
  * Version: 4.3.0
  * Author URI: https://github.com/wp-bootstrap
- * GitHub Plugin URI: https://github.com/wp-bootstrap/wp-bootstrap-navwalker
+ * GitHub Plugin URI: https://github.com/wp-bootstrap/headlesswp
  * GitHub Branch: master
  * License: GPL-3.0+
  * License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -211,13 +211,13 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) :
 			}
 
 			// If the item has_children add atts to <a>.
-			if ( $this->has_children &&  $depth < 2  ) {
-				$atts['href']          = '#';
-        $atts['data-bs-toggle']   = 'dropdown';
-				$atts['aria-haspopup'] = 'true';
-				$atts['aria-expanded'] = 'false';
-				$atts['class']         = 'dropdown-toggle nav-link';
-				$atts['id']            = 'menu-item-dropdown-' . $item->ID;
+			if ( $this->has_children && $depth < 2 ) {
+				$atts['href']           = '#';
+				$atts['data-bs-toggle'] = 'dropdown';
+				$atts['aria-haspopup']  = 'true';
+				$atts['aria-expanded']  = 'false';
+				$atts['class']          = 'dropdown-toggle nav-link';
+				$atts['id']             = 'menu-item-dropdown-' . $item->ID;
 			} else {
 				if ( true === $this->has_schema ) {
 					$atts['itemprop'] = 'url';
@@ -366,7 +366,7 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) :
 			$class            = $args['menu_class'] ? ' class="menu-fallback-menu ' . esc_attr( $args['menu_class'] ) . '"' : ' class="menu-fallback-menu"';
 			$id               = $args['menu_id'] ? ' id="' . esc_attr( $args['menu_id'] ) . '"' : '';
 			$fallback_output .= '<ul' . $id . $class . '>';
-			$fallback_output .= '<li class="nav-item"><a href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '" class="nav-link" title="' . esc_attr__( 'Add a menu', 'wp-bootstrap-navwalker' ) . '">' . esc_html__( 'Add a menu', 'wp-bootstrap-navwalker' ) . '</a></li>';
+			$fallback_output .= '<li class="nav-item"><a href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '" class="nav-link" title="' . esc_attr__( 'Add a menu', 'headlesswp' ) . '">' . esc_html__( 'Add a menu', 'headlesswp' ) . '</a></li>';
 			$fallback_output .= '</ul>';
 
 			// Menu container closing tag.

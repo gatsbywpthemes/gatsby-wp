@@ -18,7 +18,7 @@ add_action(
 	function ( $wp_customize ) use ( $headlesswp_customizer_config ) {
 		$wp_customize->get_setting( 'blogname' )->transport        = 'postMessage';
 		$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
-		
+
 		if ( isset( $wp_customize->selective_refresh ) ) {
 			$wp_customize->selective_refresh->add_partial(
 				'blogname',
@@ -41,7 +41,7 @@ add_action(
 			$wp_customize->selective_refresh->add_partial(
 				'site_icon',
 				array(
-					'selector'        => '.site-icon',
+					'selector' => '.site-icon',
 				)
 			);
 		}
@@ -54,13 +54,13 @@ add_action(
 			'headlesswp-site-settings',
 			array(
 				'title'       => __( 'Settings for your Gatsby website', 'headlesswp' ),
-				'description' => __( 'Description', 'headlesswp' ), 
+				'description' => __( 'Description', 'headlesswp' ),
 				'priority'    => 1,
 			)
 		);
-		
+
 		// move Site Identity tab to our custom panel
-		$wp_customize->get_section('title_tagline')->panel = 'headlesswp-site-settings';
+		$wp_customize->get_section( 'title_tagline' )->panel = 'headlesswp-site-settings';
 		$wp_customize->add_section(
 			'headlesswp-features',
 			array(
@@ -74,8 +74,9 @@ add_action(
 			$wp_customize->add_setting(
 				'headlesswp-logo',
 				array(
-					'type'       => 'option',
-					'capability' => 'manage_options',
+					'type'              => 'option',
+					'capability'        => 'manage_options',
+					'sanitize_callback' => 'absint',
 				)
 			);
 			$wp_customize->add_control(
@@ -93,7 +94,7 @@ add_action(
 			$wp_customize->selective_refresh->add_partial(
 				'headlesswp-logo',
 				array(
-					'selector'        => '.logo',
+					'selector' => '.logo',
 				)
 			);
 		}
@@ -102,8 +103,9 @@ add_action(
 			$wp_customize->add_setting(
 				'headlesswp-dark_mode_logo',
 				array(
-					'type'       => 'option',
-					'capability' => 'manage_options',
+					'type'              => 'option',
+					'capability'        => 'manage_options',
+					'sanitize_callback' => 'absint',
 				)
 			);
 
@@ -122,7 +124,7 @@ add_action(
 			$wp_customize->selective_refresh->add_partial(
 				'headlesswp-dark_mode_logo',
 				array(
-					'selector'        => '.dark-mode-logo',
+					'selector' => '.dark-mode-logo',
 				)
 			);
 		}
@@ -130,9 +132,12 @@ add_action(
 			$wp_customize->add_setting(
 				'headlesswp-add_wp_comments',
 				array(
-					'type'       => 'option',
-					'capability' => 'manage_options',
-					'default'    => $headlesswp_customizer_config['add_wp_comments']['default'],
+					'type'              => 'option',
+					'capability'        => 'manage_options',
+					'default'           => $headlesswp_customizer_config['add_wp_comments']['default'],
+					'sanitize_callback' => function( $checked ) {
+						return ( ( isset( $checked ) && true == $checked ) ? true : false );
+					},
 				)
 			);
 
@@ -149,7 +154,7 @@ add_action(
 			$wp_customize->selective_refresh->add_partial(
 				'headlesswp-add_wp_comments',
 				array(
-					'selector'        => '[data-to="headlesswp-add_wp_comments"]',
+					'selector' => '[data-to="headlesswp-add_wp_comments"]',
 				)
 			);
 		}
@@ -158,9 +163,12 @@ add_action(
 			$wp_customize->add_setting(
 				'headlesswp-add_wp_search',
 				array(
-					'type'       => 'option',
-					'capability' => 'manage_options',
-					'default'    => $headlesswp_customizer_config['add_wp_search']['default'],
+					'type'              => 'option',
+					'capability'        => 'manage_options',
+					'default'           => $headlesswp_customizer_config['add_wp_search']['default'],
+					'sanitize_callback' => function( $checked ) {
+						return ( ( isset( $checked ) && true == $checked ) ? true : false );
+					},
 				)
 			);
 
@@ -177,7 +185,7 @@ add_action(
 			$wp_customize->selective_refresh->add_partial(
 				'headlesswp-add_wp_search',
 				array(
-					'selector'        => '[data-to="headlesswp-add_wp_search"]',
+					'selector' => '[data-to="headlesswp-add_wp_search"]',
 				)
 			);
 		}
@@ -191,7 +199,7 @@ add_action(
 					'panel'       => 'headlesswp-site-settings',
 				)
 			);
-			
+
 			require_once get_template_directory() . '/inc/customizer-follow-links.php';
 		}
 
@@ -199,8 +207,8 @@ add_action(
 			$wp_customize->add_section(
 				'headlesswp-widgets',
 				array(
-					'title'       => __( 'Gatsby widgets', 'headlesswp' ),
-					'panel'       => 'headlesswp-site-settings',
+					'title' => __( 'Gatsby widgets', 'headlesswp' ),
+					'panel' => 'headlesswp-site-settings',
 				)
 			);
 			$areas = $headlesswp_customizer_config['widgets']['areas'];
@@ -238,7 +246,7 @@ add_action(
 					$wp_customize->selective_refresh->add_partial(
 						"headlesswp-$key",
 						array(
-							'selector' => "[data-to='headlesswp-$key']",
+							'selector'         => "[data-to='headlesswp-$key']",
 							'fallback_refresh' => false,
 						)
 					);
@@ -259,9 +267,10 @@ add_action(
 				$wp_customize->add_setting(
 					"headlesswp-colors-$name",
 					array(
-						'capability' => 'manage_options',
-						'default'    => $settings['default'],
-						'transport'  => 'postMessage',
+						'capability'        => 'manage_options',
+						'default'           => $settings['default'],
+						'transport'         => 'postMessage',
+						'sanitize_callback' => 'sanitize_hex_color',
 					)
 				);
 				$wp_customize->add_control(
@@ -289,9 +298,10 @@ add_action(
 						$wp_customize->add_setting(
 							"headlesswp-colors-mode-$key-$name",
 							array(
-								'capability' => 'manage_options',
-								'default'    => $settings['default'],
-								'transport'  => 'postMessage',
+								'capability'        => 'manage_options',
+								'default'           => $settings['default'],
+								'transport'         => 'postMessage',
+								'sanitize_callback' => 'sanitize_hex_color',
 							)
 						);
 						$wp_customize->add_control(

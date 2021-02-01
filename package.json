@@ -43,7 +43,7 @@
     "compile:rtl": "rtlcss style.css style-rtl.css",
     "lint:scss": "wp-scripts lint-style 'sass/**/*.scss'",
     "lint:js": "wp-scripts lint-js 'js/*.js'",
-    "bundle": "wp-scripts build && dir-archiver --src . --dest ../headlesswp.zip --exclude .DS_Store .stylelintrc.json .eslintrc .git .gitattributes .github .gitignore README.md composer.json composer.lock node_modules vendor package-lock.json package.json src webpack.config.js .travis.yml phpcs.xml.dist sass style.css.map"
+    "bundle": "wp-scripts build && dir-archiver --src . --dest ../headlesswp.zip --exclude .DS_Store .stylelintrc.json .eslintrc .git .gitattributes .github .gitignore README.md composer.json composer.lock node_modules vendor package-lock.json package.json src webpack.config.js .travis.yml phpcs.xml.dist sass style.css.map .vscode"
   },
   "dependencies": {
     "color-contrast-checker": "^1.5.0",

@@ -2,7 +2,7 @@
 
 if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 
-	class HeadlessWP_Setup  {
+	class HeadlessWP_Setup {
 
 		public $menu = 'headlesswp-setup-page';
 
@@ -12,14 +12,14 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 
 		private $theme_name;
 
-		public function __construct ( $plugins ) {
+		public function __construct( $plugins ) {
 			if ( is_child_theme() ) {
 				$temp_obj  = wp_get_theme();
 				$theme_obj = wp_get_theme( $temp_obj->get( 'Template' ) );
 			} else {
 				$theme_obj = wp_get_theme();
 			}
-			$this->theme_name = $theme_obj->get( 'Name' );
+			$this->theme_name  = $theme_obj->get( 'Name' );
 			$this->all_plugins = $plugins;
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 			add_action( 'admin_notices', array( $this, 'notices' ) );
@@ -35,8 +35,8 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 
 			// Make sure things get reset on switch theme.
 			add_action( 'switch_theme', array( $this, 'clean_setup' ) );
-			
-			//$this->plugin_installer('add-wpgraphql-seo');
+
+			// $this->plugin_installer('add-wpgraphql-seo');
 		}
 
 		/**
@@ -58,13 +58,13 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 
 			$complete = array(
 				'all_required_plugins_installed' => true,
-				'all_plugins_installed' => true,
+				'all_plugins_installed'          => true,
 			);
 
 			foreach ( $this->all_plugins as $slug => $plugin ) {
 				$is_active = is_plugin_active( $plugin['file_path'] );
-				if ( !$is_active ) {
-					if ($plugin['required']) {
+				if ( ! $is_active ) {
+					if ( $plugin['required'] ) {
 						$complete['all_required_plugins_installed'] = false;
 					}
 					$complete['all_plugins_installed'] = false;
@@ -139,9 +139,9 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				array_push(
 					$all_plugins,
 					array(
-						'name'  => $plugin['name'],
-						'slug'  => $key,
-						'nonce' => wp_create_nonce( "headlesswp-setup-install-$key" ),
+						'name'     => $plugin['name'],
+						'slug'     => $key,
+						'nonce'    => wp_create_nonce( "headlesswp-setup-install-$key" ),
 						'required' => $plugin['required'],
 					)
 				);
@@ -158,10 +158,10 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 					'success'  => 'headlesswp-install-container-success headlesswp-install-container',
 				),
 				'strings'      => array(
-					'start'         => esc_html__( 'Downloading, installing and activating plugins. Please be patient.', 'headlesswp' ),
-					'plugins_fail'  => esc_html__( 'Something went wrong during the installation process. Not all plugins are properly installed.', 'headlesswp' ),
-					'finished'      => esc_html__( 'Finished.', 'headlesswp' ),
-					'success'       => esc_html__( 'Plugin successfully installed.', 'headlesswp' ),
+					'start'        => esc_html__( 'Downloading, installing and activating plugins. Please be patient.', 'headlesswp' ),
+					'plugins_fail' => esc_html__( 'Something went wrong during the installation process. Not all plugins are properly installed.', 'headlesswp' ),
+					'finished'     => esc_html__( 'Finished.', 'headlesswp' ),
+					'success'      => esc_html__( 'Plugin successfully installed.', 'headlesswp' ),
 				),
 			);
 
@@ -177,12 +177,12 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				<h1>
 					<?php echo esc_html( get_admin_page_title() ); ?>
 				</h1>
-				<?php 
+				<?php
 					$img_atts = array(
-						'alt'   => esc_attr__( 'Loading...Please wait', 'headlesswp' ),
-						'src'   => esc_url( get_template_directory_uri() ) . '/images/preloader.gif',
+						'alt' => esc_attr__( 'Loading...Please wait', 'headlesswp' ),
+						'src' => esc_url( get_template_directory_uri() ) . '/images/preloader.gif',
 					);
-				?>
+					?>
 				<?php if ( ! $complete['all_required_plugins_installed'] ) { ?>
 				<section>
 					<h2>Required plugins</h2>
@@ -209,14 +209,17 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 					<h2>Recommended plugins</h2>
 					<p>To take full advantage of our Gatsby themes, we recommend a few additional WordPress Plugins. They are not required and your Gatsby will build without any of them. We recommend:</p>
 					<ul>
-						<?php foreach ($this->all_plugins as $key => $plugin) { ?>
-							<?php if (!$plugin['required']) {
-							?>
+						<?php foreach ( $this->all_plugins as $key => $plugin ) { ?>
+							<?php
+							if ( ! $plugin['required'] ) {
+								?>
 						<li>
 							<strong><?php echo $plugin['name']; ?></strong>
-							<?php if ( array_key_exists( 'description', $plugin ) ) {
-								echo $plugin['description'];
-							}?>
+								<?php
+								if ( array_key_exists( 'description', $plugin ) ) {
+									echo $plugin['description'];
+								}
+								?>
 						</li>
 							<?php } ?>
 						<?php } ?>
@@ -239,35 +242,36 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 					<p><?php esc_html_e( 'The complete list of the required(*) and recommended plugins:', 'headlesswp' ); ?></p>
 					<ul>
 						<?php foreach ( $this->all_plugins as $key => $plugin ) { ?>
-							<li><strong><?php echo esc_attr( $plugin['name'] ); ?>:</strong>
+							<li><strong><?php echo esc_html( $plugin['name'] ); ?>:</strong>
 								<?php
-									if ( 'repo' !== $plugin['source'] ) {
-										echo '<a href="' . esc_url( $plugin['source'] ) . '">' . sprintf( esc_html__( '.zip file', 'headlesswp' ) ) . '</a>';
-									} else {
-										esc_html_e( ' available in the WordPress repo', 'headlesswp' );
-									}
-									if ( isset( $plugin['github_repo'] ) ) {
-										echo ' | <a href="' . esc_url( $plugin['github_repo'] ) . '">' . sprintf( esc_html__( 'GitHub Repository', 'headlesswp' ) ) . '</a>';
-									}
+								if ( 'repo' !== $plugin['source'] ) {
+									echo '<a href="' . esc_url( $plugin['source'] ) . '">' . sprintf( esc_html__( '.zip file', 'headlesswp' ) ) . '</a>';
+								} else {
+									esc_html_e( ' available in the WordPress repo', 'headlesswp' );
+								}
+								if ( isset( $plugin['github_repo'] ) ) {
+									echo ' | <a href="' . esc_url( $plugin['github_repo'] ) . '">' . sprintf( esc_html__( 'GitHub Repository', 'headlesswp' ) ) . '</a>';
+								}
 								?>
 						</li>
 						<?php } ?>
 					</ul>	
 				</footer>
 			</div>
-		<?php }
+			<?php
+		}
 
 		public function required_plugins_notice() {
 
 		}
 
 		public function all_plugins_notices() {
-			
+
 		}
 
 		public function notices() {
 
-			if ( ! current_user_can( 'install_plugins' ) || $this->viewing_this_plugin()) {
+			if ( ! current_user_can( 'install_plugins' ) || $this->viewing_this_plugin() ) {
 				return;
 			}
 
@@ -277,15 +281,15 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				return;
 			}
 
-			if (!$complete['all_required_plugins_installed']) {
+			if ( ! $complete['all_required_plugins_installed'] ) {
 				$string  = '<div class="headlesswp-notice">';
 				$string .= '<h3>' . sprintf( esc_html__( 'Welcome to %s!', 'headlesswp' ), $this->theme_name ) . '</h3>';
-				$string .= '<p class="headlesswp-notice__text">' . sprintf( __( 'Let\'s start setting up your WordPress website for Gatsby. %s <b>requires</b> two WordPress plugins <i>Gatsby WP</i> et <i>WPGraphQL.</i>', 'headlesswp' ), $this->theme_name) . '</p>';
+				$string .= '<p class="headlesswp-notice__text">' . sprintf( __( 'Let\'s start setting up your WordPress website for Gatsby. %s <b>requires</b> two WordPress plugins <i>Gatsby WP</i> et <i>WPGraphQL.</i>', 'headlesswp' ), $this->theme_name ) . '</p>';
 				$string .= '<a href="' . esc_url( $this->get_setup_page_url() ) . '" class="headlesswp-notice__link">' . esc_html__( 'Let\'s install required plugins', 'headlesswp' ) . '</a> ';
 				$string .= '</div>';
 				add_settings_error( 'headlesswp_setup_required', 'headlesswp_setup_required', $string, 'error' );
 			}
-			if (!$complete['all_plugins_installed'] && !get_user_meta( get_current_user_id(), $this->dismiss_notice_meta_field_slug, true ) ) {
+			if ( ! $complete['all_plugins_installed'] && ! get_user_meta( get_current_user_id(), $this->dismiss_notice_meta_field_slug, true ) ) {
 				$string  = '<div class="headlesswp-notice">';
 				$string .= '<p class="headlesswp-notice__text">' . sprintf( __( '%s <b>strongly recommends</b> installing certain WordPress plugins. Some of them are not activated on this site.', 'headlesswp' ), $this->theme_name ) . '</p>';
 				$string .= '<a href="' . esc_url( $this->get_setup_page_url() ) . '" class="headlesswp-notice__link">' . esc_html__( 'Learn More', 'headlesswp' ) . '</a> ';
@@ -326,17 +330,17 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 			global $wp_settings_errors;
 
 			settings_errors( 'headlesswp_setup_required' );
-			settings_errors('headlesswp_setup');
+			settings_errors( 'headlesswp_setup' );
 
 			foreach ( (array) $wp_settings_errors as $key => $details ) {
-				if ( 'headlesswp_setup_required' === $details['setting'] || 'headlesswp_setup' === $details['setting']) {
+				if ( 'headlesswp_setup_required' === $details['setting'] || 'headlesswp_setup' === $details['setting'] ) {
 					unset( $wp_settings_errors[ $key ] );
 					break;
 				}
 			}
 		}
 
-		private function is_plugin_installed($path) {
+		private function is_plugin_installed( $path ) {
 			$all = get_plugins();
 			return array_key_exists( $path, $all ) || in_array( $path, $all, true );
 		}
@@ -363,7 +367,6 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				)
 			);
 
-
 			$skin     = new WP_Ajax_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
 			$error    = $upgrader->install( $api->download_link );
@@ -379,27 +382,26 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 			}
 		}
 
-		public function plugin_installer($plugin = false) {
+		public function plugin_installer( $plugin = false ) {
 
-			if (!$plugin) {
+			if ( ! $plugin ) {
 
-			 if ( ! isset( $_POST['plugin'] ) ) {
-				return;
+				if ( ! isset( $_POST['plugin'] ) ) {
+					return;
+				}
+
+				$plugin = $_POST['plugin'];
+
+				check_ajax_referer( 'headlesswp-setup-install-' . $plugin, 'nonce' );
+
+				if ( ! isset( $this->all_plugins[ $plugin ] ) ) {
+					return;
+				}
 			}
 
-			$plugin = $_POST['plugin'];
-
-
-			check_ajax_referer( 'headlesswp-setup-install-' . $plugin, 'nonce' );
-
-			if ( ! isset( $this->all_plugins[ $plugin ] ) ) {
-				return;
-			}
-		}
-
-			$plugin_slug   = $this->all_plugins[ $plugin ]['slug']; // Plugin slug.
-			$plugin_name   = $this->all_plugins[ $plugin ]['name']; // Plugin name.
-			$plugin_source = $this->all_plugins[ $plugin ]['source']; // Plugin source.
+			$plugin_slug      = $this->all_plugins[ $plugin ]['slug']; // Plugin slug.
+			$plugin_name      = $this->all_plugins[ $plugin ]['name']; // Plugin name.
+			$plugin_source    = $this->all_plugins[ $plugin ]['source']; // Plugin source.
 			$plugin_file_path = $this->all_plugins[ $plugin ]['file_path']; // Plugin file path.
 			if ( ! isset( $plugin_slug ) || ! isset( $plugin_name ) || ! isset( $plugin_source ) ) {
 				return;
@@ -425,7 +427,7 @@ if ( ! class_exists( 'HeadlessWP_Setup' ) ) {
 				);
 			}
 
-			if ($this->is_plugin_installed($plugin_file_path)) {
+			if ( $this->is_plugin_installed( $plugin_file_path ) ) {
 				$already_installed_as = $plugin_file_path;
 			} else {
 				// install here

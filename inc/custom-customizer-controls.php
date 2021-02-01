@@ -39,7 +39,7 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
 						<input type="checkbox" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( esc_attr( $key ), $saved_choices, true ), true ); ?> class="sortable-pill-checkbox"/>						
 							<i class="far fa-check-square"></i>						
 							<i class="far fa-square"></i>					
-						<span class="sortable-pill-title"><?php echo esc_attr( $value ); ?></span>
+						<span class="sortable-pill-title"><?php echo esc_html( $value ); ?></span>
 					</label>
 				<?php	} ?>
 				</div>
